@@ -1,0 +1,65 @@
+{
+  "name": "edok",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Restaurant automation platform.",
+  "author": "Alex Hiriavenko",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlexHiriavenko/Restaurant-Vue"
+  },
+  "keywords": [
+    "vite",
+    "vue",
+    "Composition API",
+    "vue-router",
+    "vuetify",
+    "pinia",
+    "mdi/font",
+    "eslint",
+    "prettier",
+    "gh-pages",
+    "AlexHiriavenko"
+  ],
+  "bugs": {
+    "url": "https://github.com/AlexHiriavenko/Restaurant-Vue/issues",
+    "email": "martmarchmartmarch@gmail.com"
+  },
+  "contact": {
+    "telegram": "https://t.me/AlexHiriavenko",
+    "email": "martmarchmartmarch@gmail.com"
+  },
+  "homepage": "https://github.com/AlexHiriavenko/Restaurant-Vue/blob/main/README.md",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "deploy": "npm run pre-deploy && npm run prepare-404 && npm run add-404",
+    "pre-deploy": "npx vite build && npx gh-pages -d dist",
+    "prepare-404": "([ -d ghPages404 ] || mkdir ghPages404) && cp dist/index.html ghPages404/404.html",
+    "add-404": "npx gh-pages -d ghPages404 --add"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.7.7",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5",
+    "vuetify": "^3.7.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.5",
+    "@vue/eslint-config-prettier": "^10.1.0",
+    "eslint": "^9.14.0",
+    "eslint-plugin-vue": "^9.30.0",
+    "gh-pages": "^6.2.0",
+    "prettier": "^3.3.3",
+    "unplugin-auto-import": "^0.18.3",
+    "vite": "^5.4.11",
+    "vite-plugin-vuetify": "^2.0.4"
+  }
+}
