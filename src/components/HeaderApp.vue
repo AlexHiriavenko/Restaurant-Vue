@@ -25,8 +25,10 @@
     <v-btn icon="mdi-cart" variant="text" :to="'/cart'"></v-btn>
     <DropMenu :items="authItems" @itemClick="authItemClick">
       <template #menuActivator="{ props }">
-        <span>{{ userStore.currentUser?.name || '' }}</span>
         <v-btn icon="mdi-account" variant="text" v-bind="props"></v-btn>
+        <span style="padding-inline: 8px">{{
+          userStore.currentUser?.name || ''
+        }}</span>
       </template>
     </DropMenu>
   </v-app-bar>
@@ -51,15 +53,15 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/userStore'
-import NavBar from '@/components/general/NavBar.vue'
-import DropMenu from '@/components/general/DropMenu.vue'
-import AuthForm from '@/components/auth/AuthForm.vue'
-import LoaderSpinner from '@/components/general/LoaderSpinner.vue'
-import AuthResultMessage from '@/components/auth/AuthResultMessage.vue'
+import { useUserStore } from '@/stores/userStore';
+import NavBar from '@/components/general/NavBar.vue';
+import DropMenu from '@/components/general/DropMenu.vue';
+import AuthForm from '@/components/auth/AuthForm.vue';
+import LoaderSpinner from '@/components/general/LoaderSpinner.vue';
+import AuthResultMessage from '@/components/auth/AuthResultMessage.vue';
 
-const userStore = useUserStore()
-const router = useRouter()
+const userStore = useUserStore();
+const router = useRouter();
 
 const filteredRoutes = computed(() => {
   return router.options.routes
@@ -71,10 +73,10 @@ const filteredRoutes = computed(() => {
     .map((route) => ({
       ...route,
       text: route.meta?.title
-    }))
-})
+    }));
+});
 
-const navItemClick = (item) => router.push({ name: item.name })
+const navItemClick = (item) => router.push({ name: item.name });
 
 const authItems = computed(() => {
   return userStore.isLoggedIn
@@ -82,36 +84,36 @@ const authItems = computed(() => {
     : [
         { text: 'Login', action: 'login' },
         { text: 'SignUp', action: 'signup' }
-      ]
-})
+      ];
+});
 
-const currentSubmitMethod = ref(null)
-const formTitle = ref('')
-const isLoading = ref(false)
-const authType = ref('')
-const modalRef = ref(null)
+const currentSubmitMethod = ref(null);
+const formTitle = ref('');
+const isLoading = ref(false);
+const authType = ref('');
+const modalRef = ref(null);
 
-const closeModal = () => modalRef.value?.closeModal()
+const closeModal = () => modalRef.value?.closeModal();
 
 const authItemClick = (item) => {
-  authType.value = item.action
+  authType.value = item.action;
 
   if (item.action === 'login') {
-    currentSubmitMethod.value = userStore.login
-    formTitle.value = 'LogIn Form'
-    modalRef.value.openModal()
+    currentSubmitMethod.value = userStore.login;
+    formTitle.value = 'LogIn Form';
+    modalRef.value.openModal();
   }
 
   if (item.action === 'signup') {
-    currentSubmitMethod.value = userStore.signup
-    formTitle.value = 'SignUp Form'
-    modalRef.value.openModal()
+    currentSubmitMethod.value = userStore.signup;
+    formTitle.value = 'SignUp Form';
+    modalRef.value.openModal();
   }
 
   if (item.action === 'logout') {
-    userStore.logout()
+    userStore.logout();
   }
 
-  userStore.setAuthResult('')
-}
+  userStore.setAuthResult('');
+};
 </script>

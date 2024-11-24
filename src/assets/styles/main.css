@@ -3,6 +3,7 @@
 @import './header.css';
 @import './not-found.css';
 @import './views.css';
+@import './category-card.css';
 
 :root {
   --header-height: 64px;

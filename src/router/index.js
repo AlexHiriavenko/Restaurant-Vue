@@ -1,10 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/userStore'
-import HomeView from '../views/HomeView.vue'
-import BookTable from '@/views/BookTable.vue'
-import AdminPanel from '@/views/AdminPanel.vue'
-import Menu from '@/views/Menu.vue'
-import NotFound from '@/views/NotFound.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
+import HomeView from '@/views/HomeView.vue';
+import Menu from '@/views/Menu.vue';
+import Category from '@/views/Category.vue';
+// import DishView from '@/views/DishView.vue';
+import BookTable from '@/views/BookTable.vue';
+import AdminPanel from '@/views/AdminPanel.vue';
+import NotFound from '@/views/NotFound.vue';
 
 const routes = [
   {
@@ -17,8 +19,20 @@ const routes = [
     path: '/menu',
     name: 'menu',
     component: Menu,
-    meta: { title: 'Меню', requiresAuth: false, showInTabs: true }
+    meta: { title: 'Меню', showInTabs: true }
   },
+  {
+    path: '/menu/:categorySlug',
+    name: 'category',
+    component: Category,
+    meta: { title: 'Категорія' }
+  },
+  // {
+  //   path: '/menu/:categorySlug/:dishSlug',
+  //   name: 'dish',
+  //   component: DishView,
+  //   meta: { title: 'Страва' }
+  // },
   {
     path: '/booking',
     name: 'booking',
@@ -66,29 +80,30 @@ const routes = [
     component: NotFound,
     meta: { title: '404', showInTabs: false }
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
-})
+  routes
+});
 
+// Глобальный перехват маршрутов для проверки авторизации
 router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore()
+  const userStore = useUserStore();
 
   if (to.meta.requiresAuth) {
     if (!userStore.isLoggedIn) {
-      next({ name: 'auth-required', query: { redirect: to.fullPath } })
-      return
+      next({ name: 'auth-required', query: { redirect: to.fullPath } });
+      return;
     }
 
     if (to.meta.requiresAdmin && userStore.currentUser.role !== 'admin') {
-      next({ name: 'admin-required', query: { redirect: to.fullPath } })
-      return
+      next({ name: 'admin-required', query: { redirect: to.fullPath } });
+      return;
     }
   }
 
-  next()
-})
+  next();
+});
 
-export default router
+export default router;
