@@ -1,6 +1,10 @@
 <template>
   <v-card class="category-card" elevation="2">
-    <router-link :to="`/menu/${category.slug}/`" class="image-container">
+    <router-link
+      :to="`/menu/${category.slug}/`"
+      @click="dishesStore.setCategory(props.category)"
+      class="image-container"
+    >
       <img :src="category.image" :alt="category.name" class="category-image" />
       <!-- Затемнение -->
       <div class="overlay"></div>
@@ -12,7 +16,10 @@
 </template>
 
 <script setup>
-// Пропс для передачи данных карточки
+import { useDishesStore } from '@/stores/dishesStore';
+
+const dishesStore = useDishesStore();
+
 const props = defineProps({
   category: {
     type: Object,
