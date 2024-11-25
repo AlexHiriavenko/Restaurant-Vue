@@ -10,4 +10,13 @@
 
 <script setup>
 import HeaderApp from '@/components/HeaderApp.vue';
+import { useDishesStore } from '@/stores/dishesStore';
+
+const dishesStore = useDishesStore();
+
+onMounted(async () => {
+  if (!dishesStore.dishesCategories.length) {
+    await dishesStore.getDishesCategories();
+  }
+});
 </script>

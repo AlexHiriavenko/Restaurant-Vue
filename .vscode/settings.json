@@ -16,4 +16,6 @@
       "mode": "auto"
     }
   ]
+  // "prettier.htmlWhitespaceSensitivity": "ignore",
+  // "prettier.singleAttributePerLine": true
 }

@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/userStore';
 import HomeView from '@/views/HomeView.vue';
 import Menu from '@/views/Menu.vue';
 import Category from '@/views/Category.vue';
-// import DishView from '@/views/DishView.vue';
+import DishView from '@/views/DishView.vue';
 import BookTable from '@/views/BookTable.vue';
 import AdminPanel from '@/views/AdminPanel.vue';
 import NotFound from '@/views/NotFound.vue';
@@ -27,12 +27,12 @@ const routes = [
     component: Category,
     meta: { title: 'Категорія' }
   },
-  // {
-  //   path: '/menu/:categorySlug/:dishSlug',
-  //   name: 'dish',
-  //   component: DishView,
-  //   meta: { title: 'Страва' }
-  // },
+  {
+    path: '/menu/:categorySlug/:dishSlug',
+    name: 'dish',
+    component: DishView,
+    meta: { title: 'Страва' }
+  },
   {
     path: '/booking',
     name: 'booking',

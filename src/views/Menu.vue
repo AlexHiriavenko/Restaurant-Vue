@@ -22,6 +22,8 @@ import CategoryCard from '@/components/dishes/CategoryCard.vue';
 const dishesStore = useDishesStore();
 
 onMounted(async () => {
-  await dishesStore.getDishesCategories();
+  if (!dishesStore.dishesCategories.length) {
+    await dishesStore.getDishesCategories();
+  }
 });
 </script>
