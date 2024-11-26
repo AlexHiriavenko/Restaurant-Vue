@@ -8,22 +8,47 @@ export const useDishesStore = defineStore('dishesStore', () => {
   const currentDish = ref(null);
 
   async function getDishesCategories() {
-    dishesCategories.value = (await axios.get('categories')) || [];
+    try {
+      dishesCategories.value = await axios.get('categories');
+    } catch (error) {
+      dishesCategories.value = [];
+    }
   }
 
   async function getDishesByCategory(id = null) {
     if (!id) {
       dishes.value = [];
+      return;
     }
-    dishes.value = (await axios.get(`categories/${id}/dishes`)) || [];
+    try {
+      dishes.value = await axios.get(`categories/${id}/dishes`);
+    } catch (error) {
+      dishes.value = [];
+    }
   }
 
   async function getDishById(id) {
-    currentDish.value = (await axios.get(`dishes/${id}`)) || null;
+    if (!id) {
+      currentDish.value = null;
+      return;
+    }
+    try {
+      currentDish.value = await axios.get(`dishes/${id}`);
+    } catch (error) {
+      currentDish.value = null;
+    }
   }
 
   async function getDishBySlug(slug) {
-    currentDish.value = (await axios.get(`dishes/${slug}`)) || null;
+    if (!slug) {
+      currentDish.value = null;
+      return;
+    }
+    try {
+      currentDish.value = await axios.get(`dishes/${slug}`);
+    } catch (error) {
+      currentDish.value = null;
+    }
   }
 
   // поиск категории по slug

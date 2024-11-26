@@ -1,5 +1,11 @@
 <template>
-  <v-container class="dish-view pt-12" fluid>
+  <LoaderSpinner
+    :isLoading="isLoading"
+    :isFixed="true"
+    :size="70"
+    color="white"
+  />
+  <v-container v-if="!isLoading" class="dish-view pt-12" fluid>
     <v-row class="dish-row mx-auto" align="center" justify="center">
       <!-- Изображение блюда -->
       <v-col cols="12" md="6" class="dish-image-container">
@@ -57,8 +63,12 @@ const dishesStore = useDishesStore();
 const route = useRoute();
 const dishSlug = computed(() => route.params.dishSlug);
 
+const isLoading = ref(false);
+
 onMounted(async () => {
+  isLoading.value = true;
   await dishesStore.getDishBySlug(dishSlug.value);
+  isLoading.value = false;
 });
 
 onUnmounted(() => {
