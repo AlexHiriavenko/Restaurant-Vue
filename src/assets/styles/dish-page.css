@@ -1,0 +1,75 @@
+/* Основной контейнер */
+.add-to-cart-button {
+  width: 200px;
+}
+
+.dish-view {
+  max-width: 1200px;
+}
+
+.dish-row {
+  width: 100%;
+}
+
+.dish-img {
+  max-width: 460px;
+  margin-inline: auto;
+}
+
+.dish-price {
+  color: orangered;
+  font-size: 1.8rem;
+}
+
+.details-button {
+  width: 200px;
+}
+
+/* Стили для чекбоксов (модификаторов) */
+.modifiers-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.modifier-item {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.modifier-checkbox {
+  font-size: 0.9rem; /* Уменьшенный текст */
+  color: white; /* Белый цвет текста */
+  max-height: 50px;
+  overflow-y: hidden;
+}
+
+.modifier-checkbox .v-input__control {
+  margin: 0;
+  padding: 0;
+}
+
+/* Количество блюд */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.qty-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-display {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: center;
+}

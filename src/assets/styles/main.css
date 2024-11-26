@@ -5,6 +5,7 @@
 @import './views.css';
 @import './category-card.css';
 @import './dish-card.css';
+@import './dish-page.css';
 
 :root {
   --header-height: 64px;
@@ -25,4 +26,9 @@ main.v-main {
 #app .v-layout {
   height: max-content;
   min-height: 100vh;
+}
+
+.v-checkbox .v-selection-control {
+  min-height: 0 !important;
+  max-height: 40px;
 }
