@@ -5,6 +5,7 @@ import Menu from '@/views/Menu.vue';
 import Category from '@/views/Category.vue';
 import DishView from '@/views/DishView.vue';
 import BookTable from '@/views/BookTable.vue';
+import CartView from '@/views/CartView.vue';
 import AdminPanel from '@/views/AdminPanel.vue';
 import NotFound from '@/views/NotFound.vue';
 
@@ -42,8 +43,8 @@ const routes = [
   {
     path: '/cart',
     name: 'cart',
-    component: BookTable,
-    meta: { title: 'Корзина', requiresAuth: true, showInTabs: false }
+    component: CartView,
+    meta: { title: 'Корзина', requiresAuth: false, showInTabs: false }
   },
   {
     path: '/orders-history',

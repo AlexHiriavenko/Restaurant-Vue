@@ -111,4 +111,15 @@
 .v-btn.details-button {
   font-weight: bold;
   background-color: rgb(117, 109, 33);
+  height: max-content;
+}
+
+.v-btn.details-button .v-btn__content {
+  white-space: unset;
+  line-height: 1.4;
+  padding-block: 8px;
+}
+
+.details-button.v-btn.v-btn--density-default {
+  height: max-content;
 }

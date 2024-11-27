@@ -6,6 +6,7 @@
 @import './category-card.css';
 @import './dish-card.css';
 @import './dish-page.css';
+@import './cart.css';
 
 :root {
   --header-height: 64px;
