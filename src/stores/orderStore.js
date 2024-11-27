@@ -6,8 +6,16 @@ export const useOrderStore = defineStore('orderStore', () => {
     currentOrder.value.push(dish);
   }
 
+  const updateCurrentOrder = (index, updatedDish) => {
+    currentOrder.value[index] = updatedDish;
+  };
+
+  const resetOrder = () => (currentOrder.value = []);
+
   return {
     currentOrder,
-    addToOrder
+    addToOrder,
+    updateCurrentOrder,
+    resetOrder
   };
 });

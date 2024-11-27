@@ -12,13 +12,12 @@
   >
     <v-row class="dish-row mx-auto" align="center" justify="center">
       <!-- Изображение блюда -->
-      <v-col cols="12" md="6" class="dish-image-container">
-        <v-img
-          :src="dishesStore.currentDish?.img"
-          :alt="dishesStore.currentDish?.name"
-          class="dish-img"
-        />
-      </v-col>
+      <img
+        v-if="dishesStore.currentDish"
+        :src="dishesStore.currentDish.img"
+        :alt="dishesStore.currentDish.name"
+        class="dish-img"
+      />
 
       <!-- Детали блюда -->
       <v-col
@@ -66,7 +65,7 @@
 
     <!-- Секция модификаторов -->
     <h3 class="text-center text-h5 text-white py-4 mt-4">Добавки:</h3>
-    <v-row class="modifiers-container mx-auto" style="max-width: 800px">
+    <v-row class="modifiers-container mx-auto" style="max-width: 960px">
       <v-col
         v-for="modifier in dishesStore.currentDish?.modifiers"
         :key="modifier.id"
@@ -102,15 +101,22 @@
     <template #modal-content>
       <v-container class="d-flex flex-column align-center justify-center">
         <v-card-title class="text-h5">До Кошика додано:</v-card-title>
-        <v-spacer style="height: 20px"></v-spacer>
-        <v-card-text
-          >Страва:{{ dishesStore.currentDish.name }} у кількості
-          {{ quantity }}</v-card-text
-        >
-        <v-card-text v-if="selectedModifiers.length"
-          >з добавками:{{ modifiersStringList }}</v-card-text
-        >
-        <v-btn @click="modalRef.closeModal" color="success">OK</v-btn>
+        <v-spacer></v-spacer>
+        <v-card-text class="text-subtitle-1">
+          Страва:{{ dishesStore.currentDish.name }}, у кількості: {{ quantity }}
+        </v-card-text>
+        <v-card-text v-if="selectedModifiers.length" class="text-subtitle-1">
+          з добавками:{{ modifiersStringList }}
+        </v-card-text>
+        <v-container class="d-flex align-center justify-center ga-2">
+          <router-link :to="`/`" custom v-slot="{ href }">
+            <a @click.prevent="comeBack" :href="href" class="modal-link">
+              Замовити ще
+            </a>
+          </router-link>
+          <router-link :to="`/menu`" class="modal-link">до Меню</router-link>
+          <router-link :to="`/cart`" class="modal-link">до Кошика</router-link>
+        </v-container>
       </v-container>
     </template>
   </ModalDialog>
@@ -138,7 +144,6 @@ const modalRef = ref(null);
 onMounted(async () => {
   isLoading.value = true;
   await dishesStore.getDishBySlug(dishSlug.value);
-  console.log(dishesStore.currentDish);
   isLoading.value = false;
 });
 
@@ -156,15 +161,20 @@ const decrementQuantity = () => {
   if (quantity.value > 1) quantity.value -= 1;
 };
 
-// Расчёт общей стоимости
-const totalPrice = computed(() => {
-  const basePrice = dishesStore.currentDish?.final_price * quantity.value;
+// Расчёт стоимости блюда + модификаторов
+
+const totalPerUnit = computed(() => {
+  const basePrice = +dishesStore.currentDish?.final_price;
   const modifiersPrice = selectedModifiers.value.reduce(
     (sum, modifier) => sum + parseFloat(modifier.price),
     0
   );
-  return basePrice + modifiersPrice * quantity.value;
+  return basePrice + modifiersPrice;
 });
+
+// Расчёт общей стоимости
+
+const totalPrice = computed(() => totalPerUnit.value * quantity.value);
 
 const modifiersStringList = computed(() => {
   return selectedModifiers.value.reduce((acc, modifier) => {
@@ -172,6 +182,16 @@ const modifiersStringList = computed(() => {
     return acc;
   }, '');
 });
+
+function resetDishParams() {
+  selectedModifiers.value = [];
+  quantity.value = 1;
+}
+
+function comeBack() {
+  resetDishParams();
+  modalRef.value.closeModal();
+}
 
 // Добавление в корзину
 const addToCart = () => {
@@ -181,10 +201,9 @@ const addToCart = () => {
     quantity: quantity.value,
     price: dishesStore.currentDish.final_price,
     modifiers: [...selectedModifiers.value],
-    total: totalPrice.value
+    total: totalPrice.value,
+    totalPerUnit: totalPerUnit.value
   };
-
-  console.log(selectedModifiers.value);
 
   orderStore.addToOrder(dishWithModifiers);
   modalRef.value.openModal();
