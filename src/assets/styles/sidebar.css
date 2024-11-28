@@ -1,0 +1,20 @@
+.aside-info {
+  min-width: 290px;
+  max-width: 300px;
+  height: 460px;
+  color: white; /* Белый текст */
+  border-radius: 8px;
+  border: 1px solid lightgray;
+  margin-top: 76px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  font-size: 1rem;
+}
+
+.aside-text {
+  line-height: 1.6;
+}

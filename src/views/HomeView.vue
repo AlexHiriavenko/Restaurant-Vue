@@ -1,13 +1,24 @@
 <template>
-  <v-container fluid class="views home">
-    <h2 class="text-h3 text-white text-center py-12 page-title">
-      Акційні Пропозициії
-    </h2>
+  <div class="home-img-container">
+    <v-img
+      :src="prmImage"
+      :width="1100"
+      :height="300"
+      contain
+      class="mx-auto"
+    ></v-img>
+  </div>
+  <v-container
+    fluid
+    class="home-container d-flex justify-center ga-8 px-0 py-4"
+  >
+    <SideBar v-if="$vuetify.display.mdAndUp" />
+    <DishesMenu />
   </v-container>
 </template>
 
 <script setup>
-onMounted(async () => {
-  console.log('mounted');
-});
+import prmImage from '@/assets/imgs/prm.jpg';
+import SideBar from '@/components/SideBar.vue';
+import DishesMenu from '@/components/dishes/DishesMenu.vue';
 </script>
