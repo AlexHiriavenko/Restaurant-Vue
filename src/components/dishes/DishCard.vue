@@ -1,5 +1,5 @@
 <template>
-  <v-card class="dish-card mx-auto" elevation="2">
+  <v-card class="dish-card mx-auto mb-4" elevation="2">
     <div v-if="dish.discount_percent" class="discount-label">
       <div>Знижка</div>
       <div>{{ dish.discount_percent }}%</div>
@@ -61,7 +61,7 @@ const navigateToDishPage = () => {
   router.push({
     name: 'dish',
     params: {
-      categorySlug: slug.value,
+      categorySlug: props.dish?.category_slug || slug.value,
       dishSlug: props.dish.slug
     }
   });

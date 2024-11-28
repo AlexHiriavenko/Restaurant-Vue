@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue';
 import Menu from '@/views/Menu.vue';
 import Category from '@/views/Category.vue';
 import DishView from '@/views/DishView.vue';
+import PromoDishes from '@/views/PromoDishes.vue';
 import BookTable from '@/views/BookTable.vue';
 import CartView from '@/views/CartView.vue';
 import AdminPanel from '@/views/AdminPanel.vue';
@@ -21,6 +22,12 @@ const routes = [
     name: 'menu',
     component: Menu,
     meta: { title: 'Меню', showInTabs: true }
+  },
+  {
+    path: '/promo',
+    name: 'promo',
+    component: PromoDishes,
+    meta: { title: 'Знижки', showInTabs: true }
   },
   {
     path: '/menu/:categorySlug',

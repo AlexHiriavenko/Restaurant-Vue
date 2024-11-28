@@ -6,6 +6,7 @@ export const useDishesStore = defineStore('dishesStore', () => {
   const currentCategory = ref(null);
   const dishes = ref([]);
   const currentDish = ref(null);
+  const dishesUrl = ref({ next: '', prev: '' });
 
   async function getDishesCategories() {
     try {
@@ -22,6 +23,14 @@ export const useDishesStore = defineStore('dishesStore', () => {
     }
     try {
       dishes.value = await axios.get(`categories/${id}/dishes`);
+    } catch (error) {
+      dishes.value = [];
+    }
+  }
+
+  async function getDishesByDiscount() {
+    try {
+      dishes.value = await axios.get(`dishes/promo`);
     } catch (error) {
       dishes.value = [];
     }
@@ -51,6 +60,30 @@ export const useDishesStore = defineStore('dishesStore', () => {
     }
   }
 
+  async function fetchDishes({ searchParam = '', perPage = 4 }) {
+    try {
+      let url = '';
+
+      const cursor = dishesUrl.value?.next || null;
+
+      if (cursor) {
+        url = `${cursor}&search=${encodeURIComponent(searchParam)}&perPage=${perPage}`;
+      } else {
+        url = `dishes?search=${encodeURIComponent(searchParam)}&perPage=${perPage}`;
+      }
+
+      const response = await axios.get(url);
+      const { data, links } = response;
+
+      dishes.value = [...dishes.value, ...data];
+      dishesUrl.value.next = links?.next || null;
+      dishesUrl.value.prev = links?.prev || null;
+    } catch (error) {
+      console.error('Ошибка загрузки блюд:', error);
+      dishes.value = [];
+    }
+  }
+
   // поиск категории по slug
   const findCategoryBySlug = (slug) =>
     dishesCategories.value.find((category) => category.slug === slug);
@@ -58,7 +91,12 @@ export const useDishesStore = defineStore('dishesStore', () => {
   const findDishBySlug = (slug) =>
     dishes.value.find((dish) => dish.slug === slug);
 
-  const resetDishes = () => (dishes.value = []);
+  const resetDishes = () => {
+    dishesUrl.value.next = null;
+    dishesUrl.value.prev = null;
+    dishes.value = [];
+  };
+
   const resetDish = () => (currentDish.value = null);
 
   function setCategory(category) {
@@ -83,6 +121,9 @@ export const useDishesStore = defineStore('dishesStore', () => {
     resetDishes,
     resetDish,
     setCategory,
-    setDish
+    setDish,
+    getDishesByDiscount,
+    fetchDishes,
+    dishesUrl
   };
 });

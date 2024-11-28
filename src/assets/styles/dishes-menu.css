@@ -1,0 +1,41 @@
+.load-trigger {
+  height: 60px;
+  margin: 16px auto;
+  background: transparent;
+}
+
+.dish-cards-container {
+  height: 660px;
+  min-height: 660px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: white rgb(31, 41, 47);
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.main-content {
+  max-width: 700px;
+  flex-grow: 1;
+}
+
+.search-row {
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.home-img-container {
+  max-height: 300px;
+}
+
+.v-container .main-content {
+  min-height: 900px;
+}

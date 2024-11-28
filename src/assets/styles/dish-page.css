@@ -13,7 +13,7 @@
 }
 
 .dish-img {
-  max-width: 100%;
+  max-width: 500px;
   max-height: 460px;
   margin-inline: auto;
 }
