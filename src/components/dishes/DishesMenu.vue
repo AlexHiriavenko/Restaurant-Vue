@@ -65,7 +65,7 @@ import { useDishesStore } from '@/stores/dishesStore';
 
 const dishesStore = useDishesStore();
 const loadTrigger = ref(null);
-let isFetching = ref(false);
+const isFetching = ref(false);
 const isLoading = ref(false);
 const searchParam = ref(''); // Параметр поиска
 const PER_PAGE = 4;
@@ -77,7 +77,8 @@ const loadMoreDishes = async () => {
   if (dishesStore.dishesUrl.next) {
     isFetching.value = true;
     await dishesStore.fetchDishes({
-      searchParam: searchParam.value
+      searchParam: searchParam.value || '',
+      perPage: PER_PAGE
     });
     isFetching.value = false;
   }
@@ -88,7 +89,7 @@ const searchDishes = async () => {
   isLoading.value = true;
   dishesStore.resetDishes();
   await dishesStore.fetchDishes({
-    searchParam: searchParam.value,
+    searchParam: searchParam.value || '',
     perPage: PER_PAGE
   });
   isLoading.value = false;

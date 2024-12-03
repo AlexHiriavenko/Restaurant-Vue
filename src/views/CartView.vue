@@ -15,7 +15,6 @@
         sm="6"
         md="4"
       >
-        <!-- Компонент карточки -->
         <OrderCard :dish="dish" :index="index" />
       </v-col>
     </v-row>
@@ -28,15 +27,75 @@
       v-if="orderStore.currentOrder.length > 0"
       class="text-center text-h4 text-white mt-6"
     >
-      Вартість Замовлення: {{ totalOrderPrice.toFixed(2) }} грн
+      Вартість Замовлення:
+      <span class="text-orange-darken-3">
+        {{ totalOrderPrice.toFixed(2) }} грн
+      </span>
     </h2>
+
+    <!-- Форма с информацией о заказе -->
+    <v-row
+      v-if="orderStore.currentOrder.length > 0"
+      class="mt-6 mx-auto justify-center"
+      style="max-width: 700px"
+    >
+      <v-radio-group
+        inline
+        color="green"
+        v-model="deliveryType"
+        direction="horizontal"
+      >
+        <v-radio value="pickup" base-color="white">
+          <template v-slot:label>
+            <span class="text-white">Самовивіз</span>
+          </template>
+        </v-radio>
+
+        <v-radio value="delivery" base-color="white">
+          <template v-slot:label>
+            <span class="text-white">Доставка</span>
+          </template>
+        </v-radio>
+      </v-radio-group>
+
+      <v-col cols="12">
+        <v-text-field
+          prepend-inner-icon="mdi-cellphone"
+          v-model="phoneNumber"
+          label="Телефон"
+          type="tel"
+          color="black"
+          base-color="white"
+          bg-color="white"
+          :rules="[
+            (value) => /^\d*$/.test(value) || 'Можно вводить только цифры'
+          ]"
+          required
+          max-width="460"
+        ></v-text-field>
+      </v-col>
+
+      <v-col cols="12">
+        <v-text-field
+          prepend-inner-icon="mdi-map-marker"
+          v-model="deliveryAddress"
+          label="Адреса доставки"
+          color="black"
+          base-color="white"
+          bg-color="white"
+          :disabled="deliveryType === 'pickup'"
+          clearable
+          max-width="460"
+        ></v-text-field>
+      </v-col>
+    </v-row>
 
     <!-- Кнопка отправки заказа -->
     <v-card-actions class="d-flex justify-center mt-6">
       <v-btn
         color="yellow darken-3"
         class="submit-order-button details-button"
-        :disabled="orderStore.currentOrder.length === 0"
+        :disabled="orderStore.currentOrder.length === 0 || !isFormValid"
         @click="submitOrder"
       >
         Підтвердити Замовлення
@@ -46,25 +105,51 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useOrderStore } from '@/stores/orderStore';
 import OrderCard from '@/components/dishes/OrderCard.vue';
 
 const orderStore = useOrderStore();
+const phoneNumber = ref('');
+const deliveryAddress = ref('');
+const deliveryType = ref('pickup');
 
 // Итоговая стоимость заказа
 const totalOrderPrice = computed(() =>
   orderStore.currentOrder.reduce((sum, dish) => sum + dish.total, 0)
 );
 
-// Отправка заказа (мок)
+// Очистка адреса при переключении на самовывоз
+watch(deliveryType, (newValue) => {
+  if (newValue === 'pickup') {
+    deliveryAddress.value = '';
+  }
+});
+
+// Проверка валидности формы
+const isFormValid = computed(() => {
+  if (deliveryType.value === 'delivery') {
+    return phoneNumber.value.trim() && deliveryAddress.value.trim();
+  }
+  return phoneNumber.value.trim();
+});
+
+// Отправка заказа
 const submitOrder = async () => {
   const order = {
     dishes: orderStore.currentOrder,
-    total: totalOrderPrice.value
+    total: totalOrderPrice.value,
+    phone: phoneNumber.value,
+    deliveryType: deliveryType.value,
+    address: deliveryType.value === 'delivery' ? deliveryAddress.value : null
   };
 
   console.log(order);
   orderStore.resetOrder();
+  phoneNumber.value = '';
+  deliveryAddress.value = '';
+  deliveryType.value = 'pickup';
 };
 </script>
+
+<style></style>
