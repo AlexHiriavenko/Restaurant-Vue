@@ -24,6 +24,7 @@ export const useDishesStore = defineStore('dishesStore', () => {
     try {
       dishes.value = await axios.get(`categories/${id}/dishes`);
     } catch (error) {
+      console.log(error.message);
       dishes.value = [];
     }
   }
@@ -67,9 +68,9 @@ export const useDishesStore = defineStore('dishesStore', () => {
       const cursor = dishesUrl.value?.next || null;
 
       if (cursor) {
-        url = `${cursor}&search=${encodeURIComponent(searchParam)}&perPage=${perPage}`;
+        url = `${cursor}&search=${encodeURIComponent(searchParam)}&per_page=${perPage}`;
       } else {
-        url = `dishes?search=${encodeURIComponent(searchParam)}&perPage=${perPage}`;
+        url = `dishes?search=${encodeURIComponent(searchParam)}&per_page=${perPage}`;
       }
 
       const response = await axios.get(url);
