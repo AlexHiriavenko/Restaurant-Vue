@@ -4,8 +4,9 @@
       :src="prmImage"
       :width="1100"
       :height="300"
-      contain
       class="mx-auto"
+      cover
+      position="left"
     ></v-img>
   </div>
   <v-container

@@ -60,9 +60,11 @@ export const useDishesStore = defineStore('dishesStore', () => {
     }
   }
 
-  async function fetchDishes({ searchParam = '', perPage = 4, cursor = null }) {
+  async function fetchDishes({ searchParam = '', perPage = 4 }) {
     try {
       let url = '';
+
+      const cursor = dishesUrl.value?.next || null;
 
       if (cursor) {
         url = `${cursor}&search=${encodeURIComponent(searchParam)}&perPage=${perPage}`;

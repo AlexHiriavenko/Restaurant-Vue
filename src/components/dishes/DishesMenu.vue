@@ -1,6 +1,7 @@
 <template>
   <div class="main-content">
     <h2 class="dish-title text-center text-h3 text-white mb-4">Меню</h2>
+
     <!-- Строка поиска -->
     <v-row class="search-row" align="center" justify="center">
       <v-col cols="12" md="8" lg="6">
@@ -23,12 +24,14 @@
       </v-col>
     </v-row>
 
-    <LoaderSpinner
-      :isLoading="isLoading"
-      :isFixed="false"
-      :size="70"
-      color="white"
-    />
+    <div>
+      <LoaderSpinner
+        :isLoading="isLoading"
+        :isFixed="false"
+        :size="70"
+        color="white"
+      />
+    </div>
 
     <!-- Сетка карточек -->
     <div class="dish-cards-container" v-show="!isLoading">
@@ -62,22 +65,21 @@ import { useDishesStore } from '@/stores/dishesStore';
 
 const dishesStore = useDishesStore();
 const loadTrigger = ref(null);
-let isFetching = false;
+let isFetching = ref(false);
 const isLoading = ref(false);
 const searchParam = ref(''); // Параметр поиска
 const PER_PAGE = 4;
 
 // Метод для загрузки новых данных
 const loadMoreDishes = async () => {
-  if (isFetching) return;
+  if (isFetching.value) return;
 
   if (dishesStore.dishesUrl.next) {
-    isFetching = true;
+    isFetching.value = true;
     await dishesStore.fetchDishes({
-      cursor: dishesStore.dishesUrl.next,
       searchParam: searchParam.value
     });
-    isFetching = false;
+    isFetching.value = false;
   }
 };
 
