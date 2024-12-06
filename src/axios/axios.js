@@ -2,7 +2,8 @@ import axiosConstructor from 'axios';
 
 const axios = axiosConstructor.create({
   baseURL: 'http://localhost:8080/api/',
-  timeout: 6000
+  timeout: 6000,
+  withCredentials: true
   // headers: {
   //   'Content-Type': 'application/json',
   //   authorization:

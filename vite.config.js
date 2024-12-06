@@ -1,9 +1,9 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vuetify from 'vite-plugin-vuetify'
-import AutoImport from 'unplugin-auto-import/vite'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
+import AutoImport from 'unplugin-auto-import/vite';
 
 export default defineConfig({
   base: '/Restaurant-Vue/',
@@ -19,5 +19,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf']
-})
+  assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
+  server: {
+    host: true // Разрешает слушать на всех хостах, включая 127.0.0.1
+  }
+});
