@@ -1,62 +1,62 @@
+import axios from '@/axios/axios';
+
 export const useUserStore = defineStore('userStore', () => {
   const currentUser = ref(null);
   const authResultMessage = ref('');
   const isLoggedIn = ref(false);
   const router = useRouter();
 
-  async function login(email, password) {
-    const validValues = {
-      user: {
-        email: 'test@user.com',
-        password: '123456'
-      },
-      admin: {
-        email: 'admin@admin.com',
-        password: '654321'
+  async function getUser() {
+    try {
+      const user = await axios.get('/user');
+      if (user?.id) {
+        currentUser.value = user;
+        isLoggedIn.value = true;
+        console.log(user);
       }
-    };
-
-    function isUser(email, password) {
-      return (
-        email === validValues.user.email &&
-        password === validValues.user.password
-      );
+      return currentUser.value;
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        isLoggedIn.value = false;
+        currentUser.value = null;
+      } else {
+        console.log(error);
+        console.error(
+          'An error occurred while fetching the user:',
+          error.message
+        );
+      }
     }
+  }
 
-    function isAdmin(email, password) {
-      return (
-        email === validValues.admin.email &&
-        password === validValues.admin.password
-      );
-    }
+  async function login(email, password) {
+    try {
+      // Получаем данные ответа напрямую
+      const { access_token } = await axios.post('login', {
+        email,
+        password
+      });
 
-    if (isUser(email, password)) {
+      console.log(access_token);
+
+      // Сохраняем токен в localStorage
+      localStorage.setItem('access_token', access_token);
+      console.log(localStorage.getItem('access_token'));
+
+      // Теперь вызываем getUser
+      await getUser();
       authResultMessage.value = 'You Logged In!';
-      const user = {
-        name: 'testUser',
-        role: 'user'
-      };
-
-      currentUser.value = user;
-      isLoggedIn.value = true;
-      return;
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        authResultMessage.value = 'Не вірний логін або пароль';
+      } else if (error.response && error.response.status === 403) {
+        authResultMessage.value = 'Ви вже авторизовані';
+      } else {
+        console.error('An unexpected error occurred:', error.message);
+        console.log(error);
+        authResultMessage.value = 'помилка авторизації, спробуйте пізніше';
+      }
     }
-
-    if (isAdmin(email, password)) {
-      authResultMessage.value = 'You Logged In!';
-      const admin = {
-        name: 'admin',
-        role: 'admin'
-      };
-
-      currentUser.value = admin;
-      isLoggedIn.value = true;
-      return;
-    }
-
-    authResultMessage.value = 'Invalid Credentials.';
-    currentUser.value = null;
-    isLoggedIn.value = false;
   }
 
   async function signup(email, password, name = 'NoName') {
@@ -91,6 +91,7 @@ export const useUserStore = defineStore('userStore', () => {
     login,
     signup,
     logout,
-    setAuthResult
+    setAuthResult,
+    getUser
   };
 });

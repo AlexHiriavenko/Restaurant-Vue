@@ -1,34 +1,36 @@
 import axiosConstructor from 'axios';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const axios = axiosConstructor.create({
-  baseURL: 'http://localhost:8080/api/',
+  baseURL: BASE_URL,
   timeout: 6000,
-  withCredentials: true
-  // headers: {
-  //   'Content-Type': 'application/json',
-  //   authorization:
-  // }
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
+// Перехватчик запросов: добавляем токен из localStorage
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Перехватчик ответов: возвращаем только `response.data`
 axios.interceptors.response.use(
   (response) => {
     return response.data;
   },
   (error) => {
-    // Централизованная обработка ошибок
-    if (error.response) {
-      console.error(
-        'Ошибка на сервере:',
-        error.response.status,
-        error.response.data
-      );
-    } else if (error.request) {
-      console.error('Сервер не отвечает:', error.request);
-    } else {
-      console.error('Ошибка при настройке запроса:', error.message);
-    }
-
-    // можно передавать ошибку дальше, если нужно
     return Promise.reject(error);
   }
 );

@@ -1,6 +1,11 @@
 <template>
   <v-container fluid class="views home">
-    <h2 class="text-h3 text-white text-center py-12 page-title">Меню</h2>
+    <h2
+      class="text-h3 text-white text-center py-12 page-title"
+      @click="userStore.getUser"
+    >
+      Меню
+    </h2>
     <LoaderSpinner
       :isLoading="isLoading"
       :isFixed="true"
@@ -27,9 +32,11 @@
 
 <script setup>
 import { useDishesStore } from '@/stores/dishesStore';
+import { useUserStore } from '@/stores/userStore';
 import CategoryCard from '@/components/dishes/CategoryCard.vue';
 
 const dishesStore = useDishesStore();
+const userStore = useUserStore();
 
 const isLoading = ref(false);
 
