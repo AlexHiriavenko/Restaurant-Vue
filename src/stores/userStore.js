@@ -14,27 +14,25 @@ export const useUserStore = defineStore('userStore', () => {
         currentUser.value = user;
         isLoggedIn.value = true;
       }
-      return currentUser.value;
     } catch (error) {
       if (error.response && error.response.status === 401) {
         isLoggedIn.value = false;
         currentUser.value = null;
       } else {
         console.log(error);
-        console.error(
-          'An error occurred while fetching the user:',
-          error.message
-        );
       }
+    } finally {
+      return currentUser.value;
     }
   }
 
-  async function login(email, password) {
+  async function login(email, password, rememberMe = false) {
     try {
       // Получаем данные ответа напрямую
       const { access_token } = await axios.post('login', {
         email,
-        password
+        password,
+        rememberMe
       });
 
       // Сохраняем токен в localStorage
@@ -44,14 +42,13 @@ export const useUserStore = defineStore('userStore', () => {
       await getUser();
       authResultMessage.value = 'You Logged In!';
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error.response?.status === 401 || error.response?.status === 422) {
         authResultMessage.value = 'Не вірний логін або пароль';
       } else if (error.response && error.response.status === 403) {
         authResultMessage.value = 'Ви вже авторизовані';
       } else {
-        console.error('An unexpected error occurred:', error.message);
         console.log(error);
-        authResultMessage.value = 'помилка авторизації, спробуйте пізніше';
+        authResultMessage.value = 'Помилка авторизації, спробуйте пізніше';
       }
     }
   }

@@ -34,14 +34,20 @@
         autocomplete="current-password"
       ></v-text-field>
 
+      <v-checkbox
+        v-model="rememberMe"
+        label="Remember Me"
+        class="mt-2"
+      ></v-checkbox>
+
       <v-btn class="mt-2" type="submit" block>Submit</v-btn>
     </v-form>
   </v-sheet>
 </template>
 
 <script setup>
-import router from '@/router'
-import { useAuthFormValidation } from '@/composables/useAuthFormValidation'
+import router from '@/router';
+import { useAuthFormValidation } from '@/composables/useAuthFormValidation';
 
 const { currentSubmitMethod } = defineProps({
   currentSubmitMethod: {
@@ -57,32 +63,38 @@ const { currentSubmitMethod } = defineProps({
     type: String,
     required: true
   }
-})
+});
 
-const emit = defineEmits(['update:isLoading'])
+const emit = defineEmits(['update:isLoading']);
 
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const form = ref(null)
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const rememberMe = ref(false);
+const form = ref(null);
 
-const { emailRules, passwordRules, nameRules } = useAuthFormValidation()
+const { emailRules, passwordRules, nameRules } = useAuthFormValidation();
 
-const route = useRoute()
-const redirectPath = route.query.redirect || { name: 'home' }
+const route = useRoute();
+const redirectPath = route.query.redirect || { name: 'home' };
 
 async function onSubmit() {
-  const { valid } = await form.value.validate()
+  const { valid } = await form.value.validate();
 
   if (valid) {
-    emit('update:isLoading', true)
+    emit('update:isLoading', true);
     try {
-      await currentSubmitMethod(email.value, password.value, name.value)
-      router.push(redirectPath)
+      await currentSubmitMethod(
+        email.value,
+        password.value,
+        rememberMe.value,
+        name.value
+      );
+      router.push(redirectPath);
     } catch (error) {
-      console.error('Error during submission:', error)
+      console.error('Error during submission:', error);
     }
-    emit('update:isLoading', false)
+    emit('update:isLoading', false);
   }
 }
 </script>
