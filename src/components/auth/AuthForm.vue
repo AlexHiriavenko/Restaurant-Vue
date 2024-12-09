@@ -40,16 +40,34 @@
         class="mt-2"
       ></v-checkbox>
 
+      <!-- Динамический текст и кнопка переключения -->
+      <div class="d-flex mb-6 align-center ga-4">
+        <span>
+          {{
+            authType === 'login' ? 'Ще не зареєстровані?' : 'Вже зареєстровані?'
+          }}
+        </span>
+        <v-btn
+          text
+          small
+          density="compact"
+          class="text-xs"
+          @click="toggleAuthType"
+        >
+          {{ authType === 'login' ? 'Signup' : 'Login' }}
+        </v-btn>
+      </div>
+
       <v-btn class="mt-2" type="submit" block>Submit</v-btn>
     </v-form>
   </v-sheet>
 </template>
 
 <script setup>
-import router from '@/router';
 import { useAuthFormValidation } from '@/composables/useAuthFormValidation';
+import { ref } from 'vue';
 
-const { currentSubmitMethod } = defineProps({
+const { currentSubmitMethod, authType } = defineProps({
   currentSubmitMethod: {
     type: Function,
     required: true
@@ -65,7 +83,7 @@ const { currentSubmitMethod } = defineProps({
   }
 });
 
-const emit = defineEmits(['update:isLoading']);
+const emit = defineEmits(['update:isLoading', 'update:authType']);
 
 const name = ref('');
 const email = ref('');
@@ -74,9 +92,6 @@ const rememberMe = ref(false);
 const form = ref(null);
 
 const { emailRules, passwordRules, nameRules } = useAuthFormValidation();
-
-const route = useRoute();
-const redirectPath = route.query.redirect || { name: 'home' };
 
 async function onSubmit() {
   const { valid } = await form.value.validate();
@@ -90,11 +105,15 @@ async function onSubmit() {
         rememberMe.value,
         name.value
       );
-      router.push(redirectPath);
     } catch (error) {
       console.error('Error during submission:', error);
     }
     emit('update:isLoading', false);
   }
+}
+
+function toggleAuthType() {
+  const newAuthType = authType === 'login' ? 'signup' : 'login';
+  emit('update:authType', newAuthType);
 }
 </script>

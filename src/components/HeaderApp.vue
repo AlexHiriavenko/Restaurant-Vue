@@ -25,7 +25,15 @@
     <v-btn icon="mdi-cart" variant="text" :to="'/cart'"></v-btn>
     <DropMenu :items="authItems" @itemClick="authItemClick">
       <template #menuActivator="{ props }">
-        <v-btn icon="mdi-account" variant="text" v-bind="props"></v-btn>
+        <v-avatar
+          v-if="userStore.currentUser?.avatar"
+          v-bind="props"
+          :image="userStore.currentUser?.avatar"
+          size="36"
+          color="white"
+          class="cursor-pointer"
+        ></v-avatar>
+        <v-btn v-else icon="mdi-account" variant="text" v-bind="props"></v-btn>
         <span style="padding-inline: 8px">{{
           userStore.currentUser?.name || ''
         }}</span>
@@ -46,6 +54,7 @@
         :currentSubmitMethod="currentSubmitMethod"
         :form-title="formTitle"
         :authType="authType"
+        @update:authType="handleAuthTypeChange"
         v-model:isLoading="isLoading"
       />
     </template>
@@ -115,5 +124,17 @@ const authItemClick = (item) => {
   }
 
   userStore.setAuthResult('');
+};
+
+const handleAuthTypeChange = (newAuthType) => {
+  authType.value = newAuthType;
+
+  if (newAuthType === 'login') {
+    currentSubmitMethod.value = userStore.login;
+    formTitle.value = 'LogIn Form';
+  } else {
+    currentSubmitMethod.value = userStore.signup;
+    formTitle.value = 'SignUp Form';
+  }
 };
 </script>
