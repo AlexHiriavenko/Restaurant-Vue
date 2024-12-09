@@ -9,10 +9,10 @@ export const useUserStore = defineStore('userStore', () => {
   async function getUser() {
     try {
       const user = await axios.get('/user');
+      console.log(user);
       if (user?.id) {
         currentUser.value = user;
         isLoggedIn.value = true;
-        console.log(user);
       }
       return currentUser.value;
     } catch (error) {
@@ -37,11 +37,8 @@ export const useUserStore = defineStore('userStore', () => {
         password
       });
 
-      console.log(access_token);
-
       // Сохраняем токен в localStorage
       localStorage.setItem('access_token', access_token);
-      console.log(localStorage.getItem('access_token'));
 
       // Теперь вызываем getUser
       await getUser();
@@ -64,15 +61,17 @@ export const useUserStore = defineStore('userStore', () => {
     alert('implement your own registration method');
   }
 
-  const logout = async () => {
+  async function logout() {
     try {
-      currentUser.value = null;
-      authResultMessage.value = '';
-      isLoggedIn.value = false;
+      await axios.post('logout');
     } catch (error) {
-      authResultMessage.value = 'LogOut Error - try later';
+      console.error('Logout failed:', error.message);
+    } finally {
+      isLoggedIn.value = false;
+      currentUser.value = null;
+      localStorage.removeItem('access_token');
     }
-  };
+  }
 
   watch(isLoggedIn, (newValue) => {
     if (!newValue) {
