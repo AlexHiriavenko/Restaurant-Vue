@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const axios = axiosConstructor.create({
   baseURL: BASE_URL,
   timeout: 6000,
-  withCredentials: true,
+  // withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }

@@ -42,14 +42,25 @@ export const useUserStore = defineStore('userStore', () => {
       await getUser();
       authResultMessage.value = 'You Logged In!';
     } catch (error) {
-      if (error.response?.status === 401 || error.response?.status === 422) {
-        authResultMessage.value = 'Не вірний логін або пароль';
-      } else if (error.response && error.response.status === 403) {
-        authResultMessage.value = 'Ви вже авторизовані';
-      } else {
-        console.log(error);
-        authResultMessage.value = 'Помилка авторизації, спробуйте пізніше';
+      console.log(error);
+
+      let message = 'Помилка авторизації, спробуйте пізніше';
+
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            message = 'Не вірний логін або пароль';
+            break;
+          case 422:
+            message = error.response.data?.message || message;
+            break;
+          case 403:
+            message = 'Ви вже авторизовані';
+            break;
+        }
       }
+
+      authResultMessage.value = message;
     }
   }
 
@@ -74,6 +85,13 @@ export const useUserStore = defineStore('userStore', () => {
     if (!newValue) {
       if (router.currentRoute.value.meta.requiresAuth) {
         router.push({ name: 'home' });
+      }
+    }
+
+    if (newValue) {
+      const redirectPath = router.currentRoute.value.query.redirect;
+      if (redirectPath) {
+        router.push(redirectPath);
       }
     }
   });

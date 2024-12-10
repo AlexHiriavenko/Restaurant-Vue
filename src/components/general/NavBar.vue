@@ -3,8 +3,9 @@
     <v-tab
       v-for="route in tabs"
       :key="route.name"
-      :to="{ name: route.name }"
+      :value="route.name"
       class="text-white"
+      @click="onTabClick(route)"
     >
       {{ route.meta?.title || route.name }}
     </v-tab>
@@ -12,34 +13,39 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
+
 const props = defineProps({
   tabs: {
     type: Array,
     required: true
   }
-})
+});
 
-const router = useRouter()
-const activeTab = ref(null)
+const emit = defineEmits(['authRequired']);
+const router = useRouter();
+const activeTab = ref(null);
+const userStore = useUserStore();
 
-// Функция для определения активной вкладки
-const getActiveTab = (currentPath) => {
-  // Проверяем, есть ли совпадение текущего пути с каким-либо путем в tabs
-  const matchedRoute = props.tabs.find((route) =>
-    currentPath.includes(route.path)
-  )
-  return matchedRoute ? matchedRoute.path : null
-}
-
-// Следим за изменением пути и обновляем активную вкладку
 watch(
-  () => router.currentRoute.value.path,
-  (newPath) => {
-    activeTab.value = getActiveTab(newPath)
-    if (activeTab.value === null) {
-      nextTick(() => (activeTab.value = null))
+  () => router.currentRoute.value.name,
+  (newRouteName) => {
+    activeTab.value = newRouteName;
+  }
+);
+
+// Обработка клика по вкладке
+function onTabClick(route) {
+  if (route.name) {
+    if (route.meta.requiresAuth && !userStore.isLoggedIn) {
+      activeTab.value = router.currentRoute.value.name;
+      // вызов модалки в хедере с authItemClick({ action: 'login' });
+      emit('authRequired');
     }
-  },
-  { immediate: true }
-)
+    router.push({ name: route.name });
+  } else {
+    activeTab.value = null;
+  }
+}
 </script>

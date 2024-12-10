@@ -98,17 +98,34 @@ const router = createRouter({
 // Глобальный перехват маршрутов для проверки авторизации
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
+  // if (to.meta.requiresAuth) {
+  //   if (!userStore.isLoggedIn) {
+  //     next({ name: 'auth-required', query: { redirect: to.fullPath } });
+  //     return;
+  //   }
 
-  if (to.meta.requiresAuth) {
-    if (!userStore.isLoggedIn) {
-      next({ name: 'auth-required', query: { redirect: to.fullPath } });
-      return;
-    }
+  //   if (to.meta.requiresAdmin && userStore.currentUser.role !== 'admin') {
+  //     next({ name: 'admin-required', query: { redirect: to.fullPath } });
+  //     return;
+  //   }
+  // }
 
-    if (to.meta.requiresAdmin && userStore.currentUser.role !== 'admin') {
-      next({ name: 'admin-required', query: { redirect: to.fullPath } });
-      return;
-    }
+  // next();
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    // Если пользователь не залогинен и пытается перейти на защищённый маршрут
+    const redirectPath = to.fullPath; // Целевой маршрут для редиректа
+
+    // Остаёмся на текущем маршруте, добавляя ?redirect=
+    next({
+      path: from.path,
+      query: { ...from.query, redirect: redirectPath }
+    });
+    return;
+  }
+
+  if (to.meta.requiresAdmin && userStore.currentUser?.role !== 'admin') {
+    next({ name: 'admin-required', query: { redirect: to.fullPath } });
+    return;
   }
 
   next();

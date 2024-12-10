@@ -12,7 +12,11 @@
       </v-btn>
     </v-toolbar-title>
 
-    <NavBar v-if="$vuetify.display.mdAndUp" :tabs="filteredRoutes" />
+    <NavBar
+      v-if="$vuetify.display.mdAndUp"
+      :tabs="filteredRoutes"
+      @authRequired="authItemClick({ action: 'login' })"
+    />
 
     <DropMenu
       v-if="$vuetify.display.smAndDown"
