@@ -42,7 +42,7 @@
 
       <!-- Динамический текст и кнопка переключения -->
       <div class="d-flex mb-6 align-center ga-4">
-        <span>
+        <span class="textcolor-grey">
           {{
             authType === 'login' ? 'Ще не зареєстровані?' : 'Вже зареєстровані?'
           }}
@@ -51,7 +51,7 @@
           text
           small
           density="compact"
-          class="text-xs"
+          class="text-xs textcolor-grey"
           @click="toggleAuthType"
         >
           {{ authType === 'login' ? 'Signup' : 'Login' }}

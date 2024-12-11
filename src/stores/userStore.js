@@ -64,9 +64,23 @@ export const useUserStore = defineStore('userStore', () => {
     }
   }
 
-  async function signup(email, password, name = 'NoName') {
-    console.log(name, password, email);
-    alert('implement your own registration method');
+  async function signup(email, password, rememberMe, name) {
+    try {
+      const data = {
+        name,
+        email,
+        password
+      };
+
+      await axios.post('register', data);
+
+      await login(email, password, rememberMe);
+    } catch (error) {
+      let message = 'Помилка реєстрації, спробуйте пізніше';
+      message = error.response.data?.message || message;
+      authResultMessage.value = message;
+      console.log(error);
+    }
   }
 
   async function logout() {

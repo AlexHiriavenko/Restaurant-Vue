@@ -21,6 +21,8 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
   server: {
-    host: true // Разрешает слушать на всех хостах, включая 127.0.0.1
+    host: 'localhost', // Явно указываем хост
+    port: 5173, // Указываем порт явно - связано с cors и настройками доступа Laravel
+    strictPort: true // Ошибка, если порт занят, вместо выбора случайного
   }
 });

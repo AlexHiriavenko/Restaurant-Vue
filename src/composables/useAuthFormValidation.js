@@ -2,8 +2,9 @@ export function useAuthFormValidation() {
   const nameRules = [
     (value) => {
       return (
-        (value?.length > 2 && value?.length < 15) ||
-        'Name must be between 3 and 14 characters.'
+        // (value?.length > 2 && value?.length < 15) ||
+        // 'Name must be between 3 and 14 characters.'
+        true
       );
     }
   ];
