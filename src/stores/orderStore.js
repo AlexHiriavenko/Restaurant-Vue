@@ -26,6 +26,13 @@ export const useOrderStore = defineStore('orderStore', () => {
     }
   }
 
+  async function getUserOrders(id) {
+    const url = id ? `/orders/user-history/${id}` : '/orders/user-history';
+
+    const orders = await axios.get(url);
+    console.log(orders);
+  }
+
   // Вотчер для синхронизации currentOrder с localStorage
   watch(
     currentOrder,
@@ -41,6 +48,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     addToOrder,
     updateCurrentOrder,
     resetOrder,
-    createOrder
+    createOrder,
+    getUserOrders
   };
 });
