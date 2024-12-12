@@ -202,6 +202,7 @@ const addToCart = () => {
     price: dishesStore.currentDish.final_price,
     modifiers: [...selectedModifiers.value],
     total: totalPrice.value,
+    price: +dishesStore.currentDish?.final_price,
     totalPerUnit: totalPerUnit.value
   };
 

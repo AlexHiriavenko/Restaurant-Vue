@@ -1,5 +1,5 @@
 <template>
-  <v-container class="cart-view pt-12" fluid>
+  <v-container v-if="!isLoading" class="cart-view pt-12" fluid>
     <h1 class="text-h4 text-white text-center mb-6">Корзина</h1>
 
     <!-- Список блюд в корзине -->
@@ -102,17 +102,40 @@
       </v-btn>
     </v-card-actions>
   </v-container>
+  <LoaderSpinner
+    :isLoading="isLoading"
+    :isFixed="true"
+    :size="70"
+    color="white"
+  />
+  <ModalDialog ref="modalRef">
+    <template #modal-content>
+      <v-container class="d-flex flex-column align-center justify-center">
+        <v-card-title class="text-h5">{{ resultMessage }}</v-card-title>
+        <v-btn
+          text="OK"
+          :color="buttonColor"
+          @click="modalRef.closeModal()"
+          v-focus
+        ></v-btn>
+      </v-container>
+    </template>
+  </ModalDialog>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
 import { useOrderStore } from '@/stores/orderStore';
 import OrderCard from '@/components/dishes/OrderCard.vue';
 
 const orderStore = useOrderStore();
 const phoneNumber = ref('');
-const deliveryAddress = ref('');
+const deliveryAddress = ref(null);
 const deliveryType = ref('pickup');
+const resultMessage = ref('');
+const modalRef = ref(null);
+const isLoading = ref(false);
+const buttonColor = ref('success');
+// const buttonColor = computed(() => (userStore.isLoggedIn ? 'success' : 'error'))
 
 // Итоговая стоимость заказа
 const totalOrderPrice = computed(() =>
@@ -145,10 +168,24 @@ const submitOrder = async () => {
   };
 
   console.log(order);
-  orderStore.resetOrder();
-  phoneNumber.value = '';
-  deliveryAddress.value = '';
-  deliveryType.value = 'pickup';
+
+  isLoading.value = true;
+  try {
+    await orderStore.createOrder(order);
+    orderStore.resetOrder();
+    phoneNumber.value = '';
+    deliveryAddress.value = '';
+    deliveryType.value = 'pickup';
+    resultMessage.value = 'Ваше замовлення прийнято';
+    buttonColor.value = 'success';
+  } catch (error) {
+    resultMessage.value = error.response.data?.message || error.message;
+    buttonColor.value = 'error';
+    console.log(error);
+  } finally {
+    isLoading.value = false;
+    modalRef.value.openModal();
+  }
 };
 </script>
 

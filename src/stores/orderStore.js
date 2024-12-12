@@ -1,5 +1,4 @@
-import { ref, watch } from 'vue';
-import { defineStore } from 'pinia';
+import axios from '@/axios/axios';
 
 export const useOrderStore = defineStore('orderStore', () => {
   // Загружаем данные из localStorage при инициализации
@@ -18,6 +17,15 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   const resetOrder = () => (currentOrder.value = []);
 
+  async function createOrder(data) {
+    try {
+      const order = await axios.post('/orders/store', data);
+      console.log(order);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Вотчер для синхронизации currentOrder с localStorage
   watch(
     currentOrder,
@@ -32,6 +40,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     ordersHistory,
     addToOrder,
     updateCurrentOrder,
-    resetOrder
+    resetOrder,
+    createOrder
   };
 });
