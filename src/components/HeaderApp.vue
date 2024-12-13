@@ -25,8 +25,15 @@
     />
 
     <v-spacer></v-spacer>
-
-    <v-btn icon="mdi-cart" variant="text" :to="'/cart'"></v-btn>
+    <v-badge
+      :content="orderStore.currentOrder.length"
+      color="primary"
+      offset-x="10"
+      offset-y="10"
+      class="mx-2"
+    >
+      <v-btn icon="mdi-cart" variant="text" :to="'/cart'"></v-btn>
+    </v-badge>
     <DropMenu :items="authItems" @itemClick="authItemClick">
       <template #menuActivator="{ props }">
         <v-avatar
@@ -72,8 +79,10 @@ import DropMenu from '@/components/general/DropMenu.vue';
 import AuthForm from '@/components/auth/AuthForm.vue';
 import LoaderSpinner from '@/components/general/LoaderSpinner.vue';
 import AuthResultMessage from '@/components/auth/AuthResultMessage.vue';
+import { useOrderStore } from '@/stores/orderStore';
 
 const userStore = useUserStore();
+const orderStore = useOrderStore();
 const router = useRouter();
 
 const filteredRoutes = computed(() => {

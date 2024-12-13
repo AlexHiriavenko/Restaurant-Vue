@@ -4,8 +4,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   // Загружаем данные из localStorage при инициализации
   const savedOrder = localStorage.getItem('currentOrder');
   const currentOrder = ref(savedOrder ? JSON.parse(savedOrder) : []);
-
-  const ordersHistory = ref([]);
+  const userOrders = ref([]);
 
   function addToOrder(dish) {
     currentOrder.value.push(dish);
@@ -30,7 +29,12 @@ export const useOrderStore = defineStore('orderStore', () => {
     const url = id ? `/orders/user-history/${id}` : '/orders/user-history';
 
     const orders = await axios.get(url);
-    console.log(orders);
+
+    if (Array.isArray(orders) && orders.length) {
+      userOrders.value = orders;
+    } else {
+      userOrders = [];
+    }
   }
 
   // Вотчер для синхронизации currentOrder с localStorage
@@ -44,7 +48,7 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   return {
     currentOrder,
-    ordersHistory,
+    userOrders,
     addToOrder,
     updateCurrentOrder,
     resetOrder,

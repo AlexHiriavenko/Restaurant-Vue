@@ -1,0 +1,116 @@
+<template>
+  <v-container fluid class="views">
+    <h2 class="text-h3 text-white text-center py-12 page-title">
+      Історія Замовлень
+    </h2>
+    <div>
+      <v-row
+        v-for="(order, index) in orderStore.userOrders"
+        :key="order.id"
+        class="mb-6"
+      >
+        <!-- Заголовок заказа -->
+        <v-col cols="12">
+          <v-card>
+            <v-card-title>
+              <div class="d-flex justify-space-between align-center w-100">
+                <div>
+                  Замовлення № {{ orderStore.userOrders.length - index }}
+                </div>
+                <v-btn @click="toggleDetails(order.id)" text>
+                  {{
+                    openOrderId === order.id
+                      ? 'Сховати деталі'
+                      : 'Показати деталі'
+                  }}
+                </v-btn>
+              </div>
+            </v-card-title>
+            <v-card-subtitle>
+              <div class="d-flex justify-space-between">
+                <span class="mb-4">ID Замовлення: {{ order.id }}</span>
+                <span>Дата: {{ formatDate(order.created_at) }}</span>
+                <span>Статус: {{ order.status }}</span>
+                <span
+                  >Тип:
+                  {{ order.type === 'pickup' ? 'Самовіз' : 'Доставка' }}</span
+                >
+                <span>Адреса: {{ order.address || 'Не вказано' }}</span>
+              </div>
+            </v-card-subtitle>
+
+            <!-- Детали заказа -->
+            <v-expand-transition>
+              <div v-if="openOrderId === order.id" class="mt-4">
+                <v-card-title class="mb-4 text-success">
+                  Деталі Замовлення
+                </v-card-title>
+                <v-table>
+                  <thead>
+                    <tr>
+                      <th>Страва</th>
+                      <th>Ціна</th>
+                      <th>Кількість</th>
+                      <th>Добавки</th>
+                      <th>Вартість</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in order.items" :key="item.id">
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.price }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>
+                        <div v-if="item.modifiers.length > 0">
+                          <div
+                            v-for="modifier in item.modifiers"
+                            :key="modifier.id"
+                          >
+                            {{ modifier.name }}: {{ modifier.price }}
+                          </div>
+                        </div>
+                        <div v-else>Без добавок</div>
+                      </td>
+                      <td>{{ item.total_price }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+                <v-card-title class="mt-4 text-decoration-underline">
+                  Загальна Вартість Замовлення:
+                  <span class="font-weight-bold text-success ml-4">{{
+                    order.total_price
+                  }}</span>
+                </v-card-title>
+              </div>
+            </v-expand-transition>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
+</template>
+
+<script setup>
+import { useOrderStore } from '@/stores/orderStore';
+import { ref, onMounted } from 'vue';
+
+const orderStore = useOrderStore();
+const openOrderId = ref(null);
+
+const toggleDetails = (orderId) => {
+  openOrderId.value = openOrderId.value === orderId ? null : orderId;
+};
+
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('uk-UA', options);
+};
+
+onMounted(async () => {
+  if (!orderStore.userOrders.length) {
+    await orderStore.getUserOrders();
+  }
+});
+</script>
+
+<style></style>

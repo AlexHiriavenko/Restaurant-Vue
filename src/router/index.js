@@ -9,6 +9,7 @@ import BookTable from '@/views/BookTable.vue';
 import CartView from '@/views/CartView.vue';
 import AdminPanel from '@/views/AdminPanel.vue';
 import NotFound from '@/views/NotFound.vue';
+import OrdersHistory from '@/views/OrdersHistory.vue';
 
 const routes = [
   {
@@ -56,7 +57,7 @@ const routes = [
   {
     path: '/orders-history',
     name: 'orders-history',
-    component: BookTable,
+    component: OrdersHistory,
     meta: { title: 'Історія Замовлень', requiresAuth: true, showInTabs: true }
   },
   {
