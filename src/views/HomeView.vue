@@ -2,8 +2,8 @@
   <div class="home-img-container">
     <v-img
       :src="prmImage"
-      :width="1100"
-      :height="300"
+      :width="1160"
+      :height="280"
       class="mx-auto"
       cover
       position="left"

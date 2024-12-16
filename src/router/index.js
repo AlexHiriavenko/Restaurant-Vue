@@ -43,22 +43,22 @@ const routes = [
     meta: { title: 'Страва' }
   },
   {
+    path: '/orders-history',
+    name: 'orders-history',
+    component: OrdersHistory,
+    meta: { title: 'Історія Замовлень', requiresAuth: true, showInTabs: true }
+  },
+  {
     path: '/booking',
     name: 'booking',
     component: BookTable,
-    meta: { title: 'Замовити столік', requiresAuth: true, showInTabs: true }
+    meta: { title: 'Бронювання', requiresAuth: true, showInTabs: true }
   },
   {
     path: '/cart',
     name: 'cart',
     component: CartView,
     meta: { title: 'Корзина', requiresAuth: false, showInTabs: false }
-  },
-  {
-    path: '/orders-history',
-    name: 'orders-history',
-    component: OrdersHistory,
-    meta: { title: 'Історія Замовлень', requiresAuth: true, showInTabs: true }
   },
   {
     path: '/admin-panel',

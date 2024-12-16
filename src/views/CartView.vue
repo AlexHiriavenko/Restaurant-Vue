@@ -129,13 +129,12 @@ import OrderCard from '@/components/dishes/OrderCard.vue';
 
 const orderStore = useOrderStore();
 const phoneNumber = ref('');
-const deliveryAddress = ref(null);
+const deliveryAddress = ref('');
 const deliveryType = ref('pickup');
 const resultMessage = ref('');
 const modalRef = ref(null);
 const isLoading = ref(false);
 const buttonColor = ref('success');
-// const buttonColor = computed(() => (userStore.isLoggedIn ? 'success' : 'error'))
 
 // Итоговая стоимость заказа
 const totalOrderPrice = computed(() =>
@@ -167,8 +166,6 @@ const submitOrder = async () => {
     address: deliveryType.value === 'delivery' ? deliveryAddress.value : null
   };
 
-  console.log(order);
-
   isLoading.value = true;
   try {
     await orderStore.createOrder(order);
@@ -178,8 +175,13 @@ const submitOrder = async () => {
     deliveryType.value = 'pickup';
     resultMessage.value = 'Ваше замовлення прийнято';
     buttonColor.value = 'success';
+    orderStore.getUserOrders();
   } catch (error) {
-    resultMessage.value = error.response.data?.message || error.message;
+    if (error.status === 401) {
+      resultMessage.value = 'Ви не авторизовані. Пройдіть авторизацію';
+    } else {
+      resultMessage.value = error.response.data?.message || error.message;
+    }
     buttonColor.value = 'error';
     console.log(error);
   } finally {

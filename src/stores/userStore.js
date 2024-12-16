@@ -1,6 +1,8 @@
 import axios from '@/axios/axios';
+import { useOrderStore } from './orderStore';
 
 export const useUserStore = defineStore('userStore', () => {
+  const orderStore = useOrderStore();
   const currentUser = ref(null);
   const authResultMessage = ref('');
   const isLoggedIn = ref(false);
@@ -84,19 +86,19 @@ export const useUserStore = defineStore('userStore', () => {
   }
 
   async function logout() {
+    isLoggedIn.value = false;
+    currentUser.value = null;
+    localStorage.removeItem('access_token');
     try {
       await axios.post('logout');
     } catch (error) {
-      console.error('Logout failed:', error.message);
-    } finally {
-      isLoggedIn.value = false;
-      currentUser.value = null;
-      localStorage.removeItem('access_token');
+      console.log(error);
     }
   }
 
   watch(isLoggedIn, (newValue) => {
     if (!newValue) {
+      orderStore.resetUserOrders();
       if (router.currentRoute.value.meta.requiresAuth) {
         router.push({ name: 'home' });
       }

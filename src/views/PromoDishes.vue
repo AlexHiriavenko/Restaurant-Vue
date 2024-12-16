@@ -15,7 +15,7 @@
       class="mx-auto justify-start"
     >
       <v-col
-        v-for="dish in dishesStore.dishes"
+        v-for="dish in dishesStore.promoDishes"
         :key="dish.id"
         cols="12"
         sm="6"
@@ -36,9 +36,11 @@ const dishesStore = useDishesStore();
 const isLoading = ref(false);
 
 onMounted(async () => {
-  isLoading.value = true;
-  await dishesStore.getDishesByDiscount();
-  isLoading.value = false;
+  if (!dishesStore.promoDishes.length) {
+    isLoading.value = true;
+    await dishesStore.getDishesByDiscount();
+    isLoading.value = false;
+  }
 });
 
 onUnmounted(() => {

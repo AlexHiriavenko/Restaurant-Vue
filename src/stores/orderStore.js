@@ -33,8 +33,12 @@ export const useOrderStore = defineStore('orderStore', () => {
     if (Array.isArray(orders) && orders.length) {
       userOrders.value = orders;
     } else {
-      userOrders = [];
+      userOrders.value = [];
     }
+  }
+
+  function resetUserOrders() {
+    userOrders.value = [];
   }
 
   // Вотчер для синхронизации currentOrder с localStorage
@@ -53,6 +57,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     updateCurrentOrder,
     resetOrder,
     createOrder,
-    getUserOrders
+    getUserOrders,
+    resetUserOrders
   };
 });

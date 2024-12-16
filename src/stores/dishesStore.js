@@ -5,6 +5,7 @@ export const useDishesStore = defineStore('dishesStore', () => {
   const dishesCategories = ref([]);
   const currentCategory = ref(null);
   const dishes = ref([]);
+  const promoDishes = ref([]);
   const currentDish = ref(null);
   const dishesUrl = ref({ next: '', prev: '' });
 
@@ -31,9 +32,9 @@ export const useDishesStore = defineStore('dishesStore', () => {
 
   async function getDishesByDiscount() {
     try {
-      dishes.value = await axios.get(`dishes/promo`);
+      promoDishes.value = await axios.get(`dishes/promo`);
     } catch (error) {
-      dishes.value = [];
+      promoDishes.value = [];
     }
   }
 
@@ -112,6 +113,7 @@ export const useDishesStore = defineStore('dishesStore', () => {
     dishesCategories,
     currentCategory,
     dishes,
+    promoDishes,
     currentDish,
     getDishesCategories,
     getDishesByCategory,
