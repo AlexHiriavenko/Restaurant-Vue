@@ -154,8 +154,14 @@ const formatDate = (dateString) => {
 onMounted(async () => {
   if (!orderStore.userOrders.length) {
     isLoading.value = true;
-    await orderStore.getUserOrders();
-    isLoading.value = false;
+    try {
+      await orderStore.getUserOrders();
+      console.log(orderStore.userOrders);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      isLoading.value = false;
+    }
   }
 });
 

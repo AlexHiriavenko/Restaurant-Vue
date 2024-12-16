@@ -118,7 +118,9 @@
   <ModalDialog ref="modalRef">
     <template #modal-content>
       <v-container class="d-flex flex-column align-center justify-center">
-        <v-card-title class="text-h5">{{ resultMessage }}</v-card-title>
+        <v-card-title class="text-h5 text-center" style="white-space: normal">{{
+          resultMessage
+        }}</v-card-title>
         <v-btn
           text="OK"
           :color="buttonColor"
@@ -267,12 +269,12 @@ async function submitBooking() {
   const startTime = formData.time;
   const endTime = calculateEndTime(startTime, formData.duration);
   const dateObject = new Date(formData.date);
-  const formattedDate = dateObject.toISOString().split('T')[0];
+  const formatDate = dateObject.toLocaleDateString('en-CA');
 
   const bookingData = {
     user_id: 1, // Заменить на реального пользователя
     table_id: formData.tableNumber,
-    reservation_date: formattedDate,
+    reservation_date: formatDate,
     start_time: startTime,
     end_time: endTime,
     phone_number: formData.phoneNumber,
@@ -281,8 +283,10 @@ async function submitBooking() {
 
   isLoading.value = true;
   try {
-    await bookingStore.createReservation(bookingData);
+    console.log(bookingData);
+    await bookingStore.createReservation(bookingData, 4);
     resultMessage.value = 'Столик успішно заброньовано !';
+    buttonColor.value = 'success';
     formData.tableNumber = null;
     formData.capacity = '';
     formData.date = new Date();

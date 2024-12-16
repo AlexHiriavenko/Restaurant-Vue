@@ -11,12 +11,16 @@ export const useBookingStore = defineStore('bookingStore', () => {
     }
   }
 
-  async function createReservation(data) {
+  async function createReservation(data, user_id) {
+    const url = user_id
+      ? `/booking/store/user/${user_id}`
+      : '/booking/store/user/';
+
     try {
-      const res = await axios.post('booking/store', data);
+      const res = await axios.post(url, data);
       console.log(res);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
