@@ -26,7 +26,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   }
 
   async function getUserOrders(id) {
-    const url = id ? `/orders/user-history/${id}` : '/orders/user-history';
+    const url = id ? `/orders/user/${id}` : '/orders/user';
 
     const orders = await axios.get(url);
 

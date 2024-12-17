@@ -2,6 +2,7 @@ import axios from '@/axios/axios';
 
 export const useBookingStore = defineStore('bookingStore', () => {
   const tables = ref([]);
+  const userReservations = ref([]);
 
   async function getTables() {
     try {
@@ -17,8 +18,28 @@ export const useBookingStore = defineStore('bookingStore', () => {
       : '/booking/store/user/';
 
     try {
-      const res = await axios.post(url, data);
-      console.log(res);
+      return await axios.post(url, data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function getUserReservations(user_id) {
+    const url = user_id
+      ? `/booking/active_reservations/user/${user_id}`
+      : '/booking/active_reservations/user/';
+
+    try {
+      userReservations.value = await axios.get(url);
+      console.log(userReservations.value);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function cancelReservation(id) {
+    try {
+      await axios.delete(`/booking/${id}`);
     } catch (error) {
       throw error;
     }
@@ -27,6 +48,9 @@ export const useBookingStore = defineStore('bookingStore', () => {
   return {
     tables,
     getTables,
-    createReservation
+    createReservation,
+    userReservations,
+    getUserReservations,
+    cancelReservation
   };
 });

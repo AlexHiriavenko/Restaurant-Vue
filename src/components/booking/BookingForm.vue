@@ -284,7 +284,7 @@ async function submitBooking() {
   isLoading.value = true;
   try {
     console.log(bookingData);
-    await bookingStore.createReservation(bookingData, 4);
+    await bookingStore.createReservation(bookingData);
     resultMessage.value = 'Столик успішно заброньовано !';
     buttonColor.value = 'success';
     formData.tableNumber = null;
@@ -305,6 +305,7 @@ async function submitBooking() {
   } finally {
     isLoading.value = false;
     modalRef.value.openModal();
+    await bookingStore.getUserReservations();
   }
 }
 </script>

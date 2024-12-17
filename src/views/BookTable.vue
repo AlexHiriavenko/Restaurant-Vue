@@ -6,6 +6,7 @@
     <div class="d-flex justify-center ga-12 flex-wrap mb-6 mt-6">
       <TableSchema />
       <BookingForm />
+      <ReservationsList />
     </div>
   </v-container>
 </template>
@@ -13,4 +14,5 @@
 <script setup>
 import TableSchema from '@/components/booking/TablesSchema.vue';
 import BookingForm from '@/components/booking/BookingForm.vue';
+import ReservationsList from '@/components/booking/ReservationsList.vue';
 </script>
