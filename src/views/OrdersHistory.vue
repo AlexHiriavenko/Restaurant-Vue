@@ -10,7 +10,7 @@
       color="white"
     />
     <h2
-      v-if="!paginatedItems.length"
+      v-if="!paginatedItems.length && !isLoading"
       class="text-h5 text-white text-center mb-4"
     >
       У вас поки ще не було замовлень
