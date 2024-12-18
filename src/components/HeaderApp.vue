@@ -102,7 +102,10 @@ const navItemClick = (item) => router.push({ name: item.name });
 
 const authItems = computed(() => {
   return userStore.isLoggedIn
-    ? [{ text: 'Logout', action: 'logout' }]
+    ? [
+        { text: 'Settings', action: 'toSettings', name: 'settings' },
+        { text: 'Logout', action: 'logout' }
+      ]
     : [
         { text: 'Login', action: 'login' },
         { text: 'SignUp', action: 'signup' }
@@ -118,7 +121,7 @@ const modalRef = ref(null);
 const closeModal = () => modalRef.value?.closeModal();
 
 const authItemClick = (item) => {
-  authType.value = item.action;
+  authType.value = item.action !== 'toSettings' ? item.action : '';
 
   if (item.action === 'login') {
     currentSubmitMethod.value = userStore.login;
@@ -134,6 +137,10 @@ const authItemClick = (item) => {
 
   if (item.action === 'logout') {
     userStore.logout();
+  }
+
+  if (item.action === 'toSettings') {
+    navItemClick(item);
   }
 
   userStore.setAuthResult('');

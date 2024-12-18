@@ -28,6 +28,14 @@ export const useUserStore = defineStore('userStore', () => {
     }
   }
 
+  function updateUser(prop) {
+    const user = { ...currentUser.value };
+    const [key, value] = Object.entries(prop)[0];
+    user[key] = value;
+
+    currentUser.value = user;
+  }
+
   async function login(email, password, rememberMe = false) {
     try {
       // Получаем данные ответа напрямую
@@ -122,6 +130,7 @@ export const useUserStore = defineStore('userStore', () => {
     signup,
     logout,
     setAuthResult,
-    getUser
+    getUser,
+    updateUser
   };
 });

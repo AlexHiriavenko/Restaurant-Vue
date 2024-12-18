@@ -31,8 +31,6 @@ export const useBookingStore = defineStore('bookingStore', () => {
 
     try {
       userReservations.value = await axios.get(url);
-      // userReservations.value = await axios.get('booking/index');
-      console.log(userReservations.value);
     } catch (error) {
       console.log(error);
     }

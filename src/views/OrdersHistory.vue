@@ -156,7 +156,6 @@ onMounted(async () => {
     isLoading.value = true;
     try {
       await orderStore.getUserOrders();
-      console.log(orderStore.userOrders);
     } catch (error) {
       console.log(error);
     } finally {

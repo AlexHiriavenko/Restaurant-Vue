@@ -10,6 +10,7 @@ import CartView from '@/views/CartView.vue';
 import AdminPanel from '@/views/AdminPanel.vue';
 import NotFound from '@/views/NotFound.vue';
 import OrdersHistory from '@/views/OrdersHistory.vue';
+import UserSettings from '@/views/UserSettings.vue';
 
 const routes = [
   {
@@ -59,6 +60,12 @@ const routes = [
     name: 'cart',
     component: CartView,
     meta: { title: 'Корзина', requiresAuth: false, showInTabs: false }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: UserSettings,
+    meta: { title: 'Налаштування', requiresAuth: true, showInTabs: false }
   },
   {
     path: '/admin-panel',
