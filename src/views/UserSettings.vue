@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="!loading">
     <v-card class="pa-4" elevation="2">
       <v-card-title>Завантажте свій аватар</v-card-title>
       <v-card-text>
@@ -33,10 +33,15 @@
       </v-card-actions>
     </v-card>
   </v-container>
+  <LoaderSpinner
+    :isLoading="loading"
+    :isFixed="true"
+    :size="70"
+    color="white"
+  />
 </template>
 
 <script setup>
-import axios from 'axios';
 import axiosFormData from '@/axios/axiosFormData';
 import { useUserStore } from '@/stores/userStore';
 
