@@ -69,8 +69,8 @@ export const useUserStore = defineStore('userStore', () => {
             break;
         }
       }
-
       authResultMessage.value = message;
+      throw error;
     }
   }
 
@@ -90,6 +90,7 @@ export const useUserStore = defineStore('userStore', () => {
       message = error.response.data?.message || message;
       authResultMessage.value = message;
       console.log(error);
+      throw error;
     }
   }
 

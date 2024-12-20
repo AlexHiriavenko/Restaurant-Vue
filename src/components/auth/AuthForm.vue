@@ -8,7 +8,7 @@
       <v-text-field
         v-if="authType === 'signup'"
         v-focus="authType === 'signup'"
-        v-model.trim="name"
+        v-model.trim="formInputs.name"
         :rules="nameRules"
         label="Name"
         type="text"
@@ -16,7 +16,7 @@
       ></v-text-field>
 
       <v-text-field
-        v-model.trim="email"
+        v-model.trim="formInputs.email"
         v-focus="authType === 'login'"
         :rules="emailRules"
         label="Email"
@@ -26,7 +26,7 @@
       ></v-text-field>
 
       <v-text-field
-        v-model.trim="password"
+        v-model.trim="formInputs.password"
         :rules="passwordRules"
         label="Password"
         placeholder="654321"
@@ -35,12 +35,11 @@
       ></v-text-field>
 
       <v-checkbox
-        v-model="rememberMe"
+        v-model="formInputs.rememberMe"
         label="Remember Me"
         class="mt-2"
       ></v-checkbox>
 
-      <!-- Динамический текст и кнопка переключения -->
       <div class="d-flex mb-6 align-center ga-4">
         <span class="textcolor-grey">
           {{
@@ -65,7 +64,6 @@
 
 <script setup>
 import { useAuthFormValidation } from '@/composables/useAuthFormValidation';
-import { ref } from 'vue';
 
 const { currentSubmitMethod, authType } = defineProps({
   currentSubmitMethod: {
@@ -85,29 +83,57 @@ const { currentSubmitMethod, authType } = defineProps({
 
 const emit = defineEmits(['update:isLoading', 'update:authType']);
 
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const rememberMe = ref(false);
-const form = ref(null);
+// Создаем объект состояния формы
+const formInputs = reactive({
+  name: '',
+  email: '',
+  password: '',
+  rememberMe: false
+});
 
+const form = ref(null);
 const { emailRules, passwordRules, nameRules } = useAuthFormValidation();
+
+// Инициализация из localStorage
+onMounted(() => {
+  const savedInputs = JSON.parse(
+    localStorage.getItem('authSavedInputs') || '{}'
+  );
+  formInputs.name = savedInputs.name || '';
+  formInputs.email = savedInputs.email || '';
+  formInputs.password = savedInputs.password || '';
+  formInputs.rememberMe = savedInputs.rememberMe || false;
+});
+
+// Сохранение изменений в localStorage при обновлении formInputs
+watch(
+  () => formInputs,
+  (newInputs) => {
+    localStorage.setItem('authSavedInputs', JSON.stringify(newInputs));
+  },
+  { deep: true } // следим за изменениями внутри объекта
+);
 
 async function onSubmit() {
   const { valid } = await form.value.validate();
 
   if (valid) {
     emit('update:isLoading', true);
+
     try {
       await currentSubmitMethod(
-        email.value,
-        password.value,
-        rememberMe.value,
-        name.value
+        formInputs.email,
+        formInputs.password,
+        formInputs.rememberMe,
+        formInputs.name
       );
+
+      // Успешная отправка: очищаем localStorage
+      localStorage.removeItem('authSavedInputs');
     } catch (error) {
       console.error('Error during submission:', error);
     }
+
     emit('update:isLoading', false);
   }
 }
