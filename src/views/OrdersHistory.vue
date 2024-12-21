@@ -46,11 +46,8 @@
               <div class="d-flex justify-space-between">
                 <span class="mb-4">ID Замовлення: {{ order.id }}</span>
                 <span>Дата: {{ formatDate(order.created_at) }}</span>
-                <span
-                  >Статус:
-                  {{
-                    order.status === 'in_progress' ? 'готується' : 'виконано'
-                  }}</span
+                <span :class="STATUS_COLORS[order.status]"
+                  >Статус: {{ STATUS[order.status] }}</span
                 >
                 <span
                   >Тип:
@@ -105,7 +102,10 @@
                     order.total_price
                   }}</span>
                 </v-card-title>
-                <div class="position-absolute stamp-image-wrapper">
+                <div
+                  v-if="order.status === 'done'"
+                  class="position-absolute stamp-image-wrapper"
+                >
                   <v-img
                     :src="stamp"
                     :width="140"
@@ -141,6 +141,18 @@ const orderStore = useOrderStore();
 const isLoading = ref(false);
 const openOrderId = ref(null);
 const PER_PAGE = 5;
+
+const STATUS_COLORS = {
+  in_progress: 'text-blue',
+  rejected: 'text-red',
+  done: 'text-green'
+};
+
+const STATUS = {
+  in_progress: 'готується',
+  rejected: 'відхилено',
+  done: 'виконано'
+};
 
 const toggleDetails = (orderId) => {
   openOrderId.value = openOrderId.value === orderId ? null : orderId;

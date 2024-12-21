@@ -20,7 +20,9 @@
         :key="reservation.id"
         class="pa-2 mt-4 reservation-card"
       >
-        <v-card-title>Дата: {{ reservation.reservation_date }}</v-card-title>
+        <v-card-title
+          >Дата: {{ formatDate(reservation.reservation_date) }}</v-card-title
+        >
         <v-card-text>Столик № {{ reservation.table_id }}</v-card-text>
         <v-card-text>Час: {{ reservation.start_time }}</v-card-text>
         <v-card-actions>
@@ -61,6 +63,11 @@ async function cancelReservation(id) {
   } finally {
     isLoading.value = false;
   }
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('ru-RU').format(date);
 }
 </script>
 
