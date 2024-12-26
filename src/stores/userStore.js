@@ -11,7 +11,6 @@ export const useUserStore = defineStore('userStore', () => {
   async function getUser() {
     try {
       const user = await axios.get('/user');
-      console.log(user);
       if (user?.id) {
         currentUser.value = user;
         isLoggedIn.value = true;
@@ -97,9 +96,9 @@ export const useUserStore = defineStore('userStore', () => {
   async function logout() {
     isLoggedIn.value = false;
     currentUser.value = null;
-    localStorage.removeItem('access_token');
     try {
       await axios.post('logout');
+      localStorage.removeItem('access_token');
     } catch (error) {
       console.log(error);
     }
