@@ -22,31 +22,33 @@
 import prmImage from '@/assets/imgs/prm.jpg';
 import SideBar from '@/components/SideBar.vue';
 import DishesMenu from '@/components/dishes/DishesMenu.vue';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+// import Echo from 'laravel-echo';
+// import Pusher from 'pusher-js';
 
-window.Pusher = Pusher;
+// window.Pusher = Pusher;
 
-window.Echo = new Echo({
-  broadcaster: 'pusher',
-  key: import.meta.env.VITE_PUSHER_APP_KEY,
-  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-  forceTLS: false
-});
+import { echo, pusher } from '@/plugins/echo';
 
-window.Echo.connector.pusher.connection.bind('connected', () => {
+// window.Echo = new Echo({
+//   broadcaster: 'pusher',
+//   key: import.meta.env.VITE_PUSHER_APP_KEY,
+//   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+//   forceTLS: false
+// });
+
+echo.connector.pusher.connection.bind('connected', () => {
   console.log('WebSocket connected to Pusher!');
 });
 
-window.Echo.connector.pusher.connection.bind('disconnected', () => {
+echo.connector.pusher.connection.bind('disconnected', () => {
   console.log('WebSocket disconnected from Pusher.');
 });
 
-window.Echo.connector.pusher.connection.bind('error', (err) => {
+echo.connector.pusher.connection.bind('error', (err) => {
   console.error('WebSocket error:', err);
 });
 
-window.Echo.channel('orders').listen('OrderStatusUpdated', (event) => {
+echo.channel('orders').listen('OrderStatusUpdated', (event) => {
   console.log('Event received:', event);
 });
 </script>

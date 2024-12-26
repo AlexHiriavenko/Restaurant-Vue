@@ -54,7 +54,6 @@ const loading = ref(false); // Состояние загрузки
 watch(file, (newFile) => {
   if (newFile) {
     previewUrl.value = URL.createObjectURL(newFile);
-    console.log('Файл выбран:', newFile);
   } else {
     previewUrl.value = null;
   }
@@ -71,7 +70,6 @@ const uploadFile = async () => {
     // Используем axiosFormData
     const response = await axiosFormData.post('user/avatar', formData);
 
-    console.log('Ответ от сервера:', response);
     userStore.updateUser({ avatar: response.avatar_url });
     alert('Файл успешно загружен!');
 

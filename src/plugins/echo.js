@@ -1,10 +1,17 @@
-// import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
-// window.Pusher = Pusher;
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
-// window.Echo = new Echo({
-//   broadcaster: 'pusher',
-//   key: import.meta.env.VITE_PUSHER_APP_KEY,
-//   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-//   forceTLS: true
-// });
+let pusher = (window.Pusher = Pusher);
+
+let echo;
+
+window.Echo = await new Echo({
+  broadcaster: 'pusher',
+  key: import.meta.env.VITE_PUSHER_APP_KEY,
+  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+  forceTLS: false
+});
+
+echo = window.Echo;
+
+export { echo, pusher };
