@@ -1,5 +1,5 @@
 <template>
-  <v-menu>
+  <v-menu :close-on-content-click="false" v-model="menu">
     <template #activator="{ props }">
       <v-badge
         :content="unreadCount"
@@ -18,11 +18,12 @@
         >Нових повідомлень немає</v-list-item-title
       >
       <v-list-item
-        v-for="(notification, index) in notifyStore.notifications"
+        v-for="(notification, index) in notifyList"
         :key="notification.id || index"
         class="notify-item"
       >
         <v-list-item-title
+          @click="notifyClick(notification.id, notification.text)"
           class="cursor-pointer"
           :class="{
             'font-weight-bold': !notification.was_read,
@@ -36,16 +37,35 @@
           icon="mdi-delete"
           variant="text"
           size="small"
-          @click="onDeleteClick"
+          @click="notifyStore.deleteNotification(notification.id)"
         ></v-btn>
       </v-list-item>
     </v-list>
   </v-menu>
+  <ModalDialog ref="modalRef">
+    <template #modal-content>
+      <v-container
+        class="d-flex flex-column align-center justify-center pt-0 mb-4"
+      >
+        <v-card-title class="text-h5 py-0">Повідомлення:</v-card-title>
+        <v-spacer></v-spacer>
+        <v-card-text class="text-subtitle-1">
+          {{ currentNotifyText }}
+        </v-card-text>
+        <v-spacer></v-spacer>
+        <v-btn
+          text="OK"
+          color="success"
+          @click="modalRef.closeModal()"
+          v-focus
+        ></v-btn>
+      </v-container>
+    </template>
+  </ModalDialog>
 </template>
 
 <script setup>
 import { useNotifyStore } from '@/stores/notificationStore';
-import { computed, ref } from 'vue';
 
 defineProps({
   modelValue: {
@@ -57,18 +77,26 @@ defineProps({
 const notifyStore = useNotifyStore();
 
 const unreadCount = ref(0);
+const modalRef = ref(null);
+const menu = ref(false);
+const currentNotifyText = ref('');
+const notifyList = ref([]);
 
-function onDeleteClick() {
-  console.log('delete');
+function notifyClick(id, text) {
+  modalRef.value.openModal();
+  menu.value = false;
+  currentNotifyText.value = text;
+  notifyStore.markAsRead(id);
 }
 
 watch(
   () => notifyStore.notifications,
   (newVal, oldVal) => {
     unreadCount.value = newVal.filter((n) => !n.was_read).length;
+    notifyList.value = newVal;
   },
   {
-    // deep: true,
+    deep: true,
     immediate: true // Выполнить при первой инициализации
   }
 );
@@ -88,4 +116,3 @@ watch(
   text-align: center;
 }
 </style>
-<!-- @click="itemClick(notification)" -->
