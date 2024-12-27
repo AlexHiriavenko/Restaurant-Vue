@@ -258,6 +258,28 @@ function isValid() {
   return true;
 }
 
+// const formattedDate = computed(() => {
+//   if (!formData.date) return '';
+//   const date = new Date(formData.date);
+//   const year = date.getFullYear();
+//   const month = String(date.getMonth() + 1).padStart(2, '0');
+//   const day = String(date.getDate()).padStart(2, '0');
+//   return `${year}-${month}-${day}`;
+// });
+
+watch(
+  () => formData.date,
+  (newDate) => {
+    if (newDate) {
+      const dateObject = new Date(formData.date);
+      const formatDate = dateObject.toLocaleDateString('en-CA');
+      const formatted = formatDate;
+      localStorage.setItem('selectedDate', formatted); // Сохранить дату
+    }
+  },
+  { immediate: true } // Выполнить при монтировании
+);
+
 // Отправка данных
 async function submitBooking() {
   if (!isValid()) {

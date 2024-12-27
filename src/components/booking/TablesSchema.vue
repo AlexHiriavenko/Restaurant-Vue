@@ -160,6 +160,16 @@
         <v-card-subtitle class="text-h5">
           Кількість персон: {{ selectedTable.seats }}
         </v-card-subtitle>
+        <div v-if="reservations.length">
+          <div
+            v-for="reservation in reservations"
+            :key="reservation.id"
+            class="text-red"
+          >
+            заброньовано з {{ reservation.start_time }} до
+            {{ reservation.end_time }}
+          </div>
+        </div>
         <v-img
           :src="selectedTable.img"
           :width="220"
@@ -182,8 +192,11 @@
 import twoSeatsImg from '@/assets/imgs/two-seats.webp';
 import fourSeatsImg from '@/assets/imgs/four-seats.webp';
 import sixSeatsImg from '@/assets/imgs/six-seats.webp';
+import { useBookingStore } from '@/stores/bookingStore';
 
+const bookingStore = useBookingStore();
 const modalRef = ref(null);
+const reservations = ref([]);
 
 const tables = [
   { number: 1, seats: '1..2', img: twoSeatsImg },
@@ -200,11 +213,15 @@ const tables = [
 
 const selectedTable = ref({ number: '', seats: '', img: '' });
 
-function openTableModal(tableNumber) {
+async function openTableModal(tableNumber) {
   const table = tables.find((t) => t.number === tableNumber);
   if (table) {
     selectedTable.value = table;
     modalRef.value.openModal();
+    reservations.value = await bookingStore.getBookingByDate(
+      table.number,
+      localStorage.getItem('selectedDate')
+    );
   }
 }
 </script>

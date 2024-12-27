@@ -44,12 +44,29 @@ export const useBookingStore = defineStore('bookingStore', () => {
     }
   }
 
+  async function getBookingByDate(table_id, reservation_date) {
+    try {
+      const response = await axios.get('/booking/date', {
+        params: {
+          table_id,
+          reservation_date
+        }
+      });
+      console.log(response);
+      return response?.reservations || [];
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   return {
     tables,
     getTables,
     createReservation,
     userReservations,
     getUserReservations,
-    cancelReservation
+    cancelReservation,
+    getBookingByDate
   };
 });
