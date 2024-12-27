@@ -22,33 +22,4 @@
 import prmImage from '@/assets/imgs/prm.jpg';
 import SideBar from '@/components/SideBar.vue';
 import DishesMenu from '@/components/dishes/DishesMenu.vue';
-// import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
-
-// window.Pusher = Pusher;
-
-import { echo, pusher } from '@/plugins/echo';
-
-// window.Echo = new Echo({
-//   broadcaster: 'pusher',
-//   key: import.meta.env.VITE_PUSHER_APP_KEY,
-//   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-//   forceTLS: false
-// });
-
-echo.connector.pusher.connection.bind('connected', () => {
-  console.log('WebSocket connected to Pusher!');
-});
-
-echo.connector.pusher.connection.bind('disconnected', () => {
-  console.log('WebSocket disconnected from Pusher.');
-});
-
-echo.connector.pusher.connection.bind('error', (err) => {
-  console.error('WebSocket error:', err);
-});
-
-echo.channel('orders').listen('OrderStatusUpdated', (event) => {
-  console.log('Event received:', event);
-});
 </script>

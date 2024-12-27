@@ -25,6 +25,9 @@
     />
 
     <v-spacer></v-spacer>
+
+    <Notifications />
+
     <v-badge
       :content="orderStore.currentOrder.length"
       color="primary"
@@ -74,12 +77,13 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
+import { useOrderStore } from '@/stores/orderStore';
 import NavBar from '@/components/general/NavBar.vue';
 import DropMenu from '@/components/general/DropMenu.vue';
 import AuthForm from '@/components/auth/AuthForm.vue';
 import LoaderSpinner from '@/components/general/LoaderSpinner.vue';
 import AuthResultMessage from '@/components/auth/AuthResultMessage.vue';
-import { useOrderStore } from '@/stores/orderStore';
+import Notifications from './Notifications.vue';
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();

@@ -1,8 +1,10 @@
 import axios from '@/axios/axios';
 import { useOrderStore } from './orderStore';
+import { useNotifyStore } from './notificationStore';
 
 export const useUserStore = defineStore('userStore', () => {
   const orderStore = useOrderStore();
+  const notifyStore = useNotifyStore();
   const currentUser = ref(null);
   const authResultMessage = ref('');
   const isLoggedIn = ref(false);
@@ -104,7 +106,7 @@ export const useUserStore = defineStore('userStore', () => {
     }
   }
 
-  watch(isLoggedIn, (newValue) => {
+  watch(isLoggedIn, async (newValue) => {
     if (!newValue) {
       orderStore.resetUserOrders();
       if (router.currentRoute.value.meta.requiresAuth) {
@@ -117,6 +119,7 @@ export const useUserStore = defineStore('userStore', () => {
       if (redirectPath) {
         router.push(redirectPath);
       }
+      await notifyStore.getNotifications();
     }
   });
 

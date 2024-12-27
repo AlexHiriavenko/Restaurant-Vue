@@ -1,7 +1,6 @@
 import axios from '@/axios/axios';
 
 export const useOrderStore = defineStore('orderStore', () => {
-  // Загружаем данные из localStorage при инициализации
   const savedOrder = localStorage.getItem('currentOrder');
   const currentOrder = ref(savedOrder ? JSON.parse(savedOrder) : []);
   const userOrders = ref([]);
@@ -18,8 +17,7 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   async function createOrder(data) {
     try {
-      const order = await axios.post('/orders/store', data);
-      console.log(order);
+      await axios.post('/orders/store', data);
     } catch (error) {
       throw error;
     }
@@ -41,6 +39,13 @@ export const useOrderStore = defineStore('orderStore', () => {
     userOrders.value = [];
   }
 
+  function updateOrderStatus(id, status) {
+    const order = userOrders.value.find((order) => order.id === id);
+    if (order) {
+      order.status = status;
+    }
+  }
+
   // Вотчер для синхронизации currentOrder с localStorage
   watch(
     currentOrder,
@@ -58,6 +63,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     resetOrder,
     createOrder,
     getUserOrders,
-    resetUserOrders
+    resetUserOrders,
+    updateOrderStatus
   };
 });
