@@ -1,5 +1,17 @@
 # Restaurant. Vue3 Composition API. Frontend.
 
+## Project URL
+
+1. Клиетская часть
+
+- production: https://alexhiriavenko.github.io/Restaurant-Vue/
+- develop: http://localhost:5173/Restaurant-Vue/
+
+2. Админ панель
+
+- production: в стадии деплоя
+- develop: https://localhost:8443/
+
 ## Описание
 
 - Тема: Платформа для автоматизации ресторана
