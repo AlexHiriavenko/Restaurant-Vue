@@ -9,8 +9,8 @@
 
 2. Админ панель
 
-- production: в стадии деплоя
-- develop: https://localhost:8443/
+- production: https://restaurant-laravel-production.up.railway.app/
+- develop: http://localhost:8080/ или https://localhost:8443/
 
 ## Описание
 
