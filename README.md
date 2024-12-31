@@ -5,6 +5,18 @@
 - Тема: Платформа для автоматизации ресторана
 - Функционал: заказы блюд, бронирования столиков, аналитика, формирование и отправка отчетов, real-time уведомления.
 
+## Project URL
+
+1. Клиетская часть
+
+- production: https://alexhiriavenko.github.io/Restaurant-Vue/
+- develop: http://localhost:5173/Restaurant-Vue/
+
+2. Админ панель
+
+- production: https://restaurant-laravel-production.up.railway.app/
+- develop: http://localhost:8080/ или https://localhost:8443/
+
 ## Frontend чать
 
 - клиентская часть реализована в репозитории [Restaurant-Vue](https://github.com/AlexHiriavenko/Restaurant-Vue) и запускается на http://localhost:5173/Restaurant-Vue/ (адрес задан жестко если этот порт занят будет ошибка);
